@@ -1,0 +1,57 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+    <%- include('../includes/nav.ejs') %>
+    <main>
+       <div class="container">
+           <% if(errorMessage) { %>
+                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                        <%= errorMessage %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+           <% } %>
+           <div class="col-md-6 mx-auto">
+               <form action="/auth/signup" method="POST">
+                    <div class="card">
+                            <div class="card-header">
+                              <h1 class="text-center">Sign Up</h1>
+                            </div>
+                           <div class="card-body">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control <%= validationErrors.find(e => e.param === 'username') ? 'border border-danger' : '' %>" name="username" id="username" value="<%=oldInput.username %>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border border-danger' : '' %>" name="email" id="email" value="<%=oldInput.email %>" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Gender</label>
+                                    <select class="form-control" id="gender" name="gender">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>" name="password" id="password" value="<%=oldInput.password %>" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'confirmPassword') ? 'border border-danger' : '' %>" name="confirmPassword" id="confirmPassword" value="<%=oldInput.confirmPassword %>" >
+                                </div>
+                           </div>
+                           <div class="card-footer">
+                               <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                           </div>
+                          </div>
+                       </div>
+               </form>
+       </div>
+    </main>
+    
+
+
+<%- include('../includes/footer.ejs') %>

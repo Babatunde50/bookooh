@@ -1,0 +1,26 @@
+:root {
+    --main-color: #3a4660; 
+  }
+
+
+body {
+    margin-top: 150px;
+}
+
+
+.navbar {
+    box-shadow: 2px 2px 2px #000;
+    opacity: 0.9;
+    background: var(--main-color);
+}
+
+.navbar .nav-item {
+    font-size: 1.4rem;
+    padding-right: 1.4rem;
+}
+
+.card .card-img-top {
+    height: 15rem;
+    object-fit: cover;
+}
+

@@ -1,0 +1,59 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+    <%- include('../includes/nav.ejs') %>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                     <img src="/<%=book.image %>" class="img-fluid mb-1" alt="Responsive image">
+                     <h3 class="text-center"><%= book.title %></h3>
+                     <p class=""> Submitted By: <a href="#"><%= book.userId.username %></a></p>
+                     <p><%= book.description %></p>
+                </div>
+                <div class="col-md-6">
+                    <form action="/book/<%=book._id%>/add-review" method="POST" class="mb-3">
+                        <div class="input-group">
+                            <input placeholder="Please add a review" type="text" class="form-control" name="review">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary">Submit</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="bookId" value="<%= book._id %>">
+                    </form>
+                    <div class="col-12">
+                        <% for(review of reviews) { %>
+                            <div class="row">
+                                <div class="col-2">
+                                    <img width="50px" class="rounded-circle" src="/<%= review.userId.profileImage %>">
+                                </div>
+                                <div class="col-10">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5> <%= review.userId.username.toUpperCase() %> </h5>
+                                        </div>
+                                        <div class="col-6">
+                                            <i class="text-muted text-right"><i class="far fa-clock"></i> <%= moment(review.updatedAt.getTime()).fromNow() %></i>
+                                        </div>
+                                    </div>
+                                    <p> <%= review.review %> </p>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="m-auto text-center">
+                <a href="/edit-book/<%=book._id%>" type="button" class="btn btn-lg btn-outline-secondary text-center">Edit</a>
+                <form action="/delete-book/<%= book._id %>" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-lg btn-outline-danger text-center">Delete</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+
+
+<%- include('../includes/footer.ejs') %>

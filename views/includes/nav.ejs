@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top"> 
+    <div class="container">
+             <a href="" class="navbar-brand">Bookooh!!!</a>
+             <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                   <span class="navbar-toggler-icon"></span>
+             </button>
+             <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item <%= path === '/' ? 'active' : '' %>">
+                        <a href="/" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item <%= path === '/books' ? 'active' : '' %>">
+                        <a href="/books" class="nav-link">Books</a>
+                    </li>
+                    <% if (isAuthenticated) { %>
+                        <li class="nav-item">
+                            <a href="/add-book" class="nav-link <%= path === '/add-book' ? 'active' : '' %>">Add Book</a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/auth/logout" method="POST">
+                                <button type="submit" class="nav-link btn btn-link">Logout</button>
+                            </form>
+                        </li>
+                    <% } %>
+                    
+                    <li class="nav-item">
+                        <a href="/auth/login" class="nav-link <%= path === '/auth/login' ? 'active' : '' %>">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/auth/signup" class="nav-link <%= path === '/auth/signup' ? 'active' : '' %>">Sign Up</a>
+                    </li>
+                </ul>
+             </div>
+    </div>
+</nav> 

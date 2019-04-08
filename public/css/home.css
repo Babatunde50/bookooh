@@ -1,0 +1,35 @@
+:root {
+    --main-color: #3a4660; 
+  }
+
+
+.navbar {
+    box-shadow: 2px 2px 2px #000;
+    opacity: 0.9;
+    background: var(--main-color);
+}
+
+.navbar .nav-item {
+    font-size: 1.4rem;
+    padding-right: 1.4rem;
+}
+
+#home-section {
+    background: url('/images/home.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 700px;
+}
+
+#home-section .home-inner {
+    padding-top: 150px;
+}
+
+#home-section .fas {
+    color: #fff;
+    background: var(--main-color);
+    padding: 5px;
+    border-radius: 5px;
+
+}

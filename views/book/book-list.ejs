@@ -1,0 +1,46 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+    <%- include('../includes/nav.ejs') %>
+    <main>
+        <div class="container">
+                <% if(message.length > 0) { %>
+                    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                            <%= message %>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+               <% } %>
+            <% if(books.length > 0) { %>
+            <h1>All Books</h1>
+            <div class="row">
+                <% for(book of books) { %>
+                    <div class="col-sm-6 col-md-4">
+                        <div class="card">
+                            <img src="<%=book.image %>" alt="image" class="img-fluid card-img-top">
+                             <div class="card-body">
+                                <h5 class="card-title text-center"> <%= book.title %> </h5>
+                                <p class="card-text"><%= book.description.substring(0, 50) %> ... </p>
+                                <p class="card-text text-muted text-right"> Book Type: <%= book.type %></p>
+                                <div class="text-center">
+                                    <a href="/book/<%=book._id%>" class="btn btn-outline-primary text-center">View Details</a>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center text-muted">
+                                Last Edited: <b> <%= moment(book.updatedAt.getTime()).fromNow() %> </b>
+                            </div>
+                        </div>
+                    </div>
+                <%}%>
+            </div>
+
+        </div>
+       <% } else { %>
+            <h1> No Book is found </h1>
+        <% } %>
+    </main>
+    
+
+
+<%- include('../includes/footer.ejs') %>
