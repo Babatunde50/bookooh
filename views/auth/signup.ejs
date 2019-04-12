@@ -43,6 +43,7 @@
                                     <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'confirmPassword') ? 'border border-danger' : '' %>" name="confirmPassword" id="confirmPassword" value="<%=oldInput.confirmPassword %>" >
                                 </div>
                            </div>
+                           <input type="hidden" value="<%= csrfToken %>" name="_csrf">
                            <div class="card-footer">
                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
                            </div>

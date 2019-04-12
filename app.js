@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const multer = require('multer')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf')
 const flash = require('connect-flash')
 const moment = require('moment')
 
@@ -20,6 +21,7 @@ const store = new MongoDBStore({
   uri: 'mongodb://localhost:27017/book-ooh',
   collection: 'sessions'
 });
+const csrfProtection = csrf()
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -55,9 +57,9 @@ app.use(session({
   saveUninitialized: false,
   store: store
 }))
+app.use(csrfProtection)
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
-
 
 
 app.set("view engine", "ejs");
@@ -65,6 +67,7 @@ app.set("view engine", "ejs");
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.moment = moment
+  res.locals.csrfToken = req.csrfToken()
   next();
 });
 

@@ -36,6 +36,7 @@
                                     <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>" name="password" id="password">
                                 </div>
                            </div>
+                           <input type="hidden" value="<%= csrfToken %>" name="_csrf">
                            <div class="card-footer">
                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
                            </div>

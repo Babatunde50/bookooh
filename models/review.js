@@ -3,8 +3,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const reviewSchema = new Schema({
-    review: {
+    text: {
         type: String,
+        required: true
+    },
+    rating: {
+        type: Number,
         required: true
     },
     userId: {

@@ -27,14 +27,9 @@ const userSchema = new Schema({
         type: Boolean,
         required: true
     },
-    books: [{
+    booksId: [{
         type: Schema.Types.ObjectId,
         ref: 'Book',
-        required: true
-    }],
-    reviews: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Review',
         required: true
     }],
     verifyToken: String,

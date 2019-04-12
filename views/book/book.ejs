@@ -2,57 +2,225 @@
 
 <body>
     <%- include('../includes/nav.ejs') %>
-    <main>
+    <section id="showcase-inner" class="py-5 text-white">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                     <img src="/<%=book.image %>" class="img-fluid mb-1" alt="Responsive image">
-                     <h3 class="text-center"><%= book.title %></h3>
-                     <p class=""> Submitted By: <a href="#"><%= book.userId.username %></a></p>
-                     <p><%= book.description %></p>
+            <div class="row text-center">
+                <div class="col-md-12">
+                  <h1 class="display-4"><%= book.title %></h1>
+                  <p class="lead"><i class="fas fa-map-marker text-primary"></i> Book Location</p>
                 </div>
-                <div class="col-md-6">
-                    <form action="/book/<%=book._id%>/add-review" method="POST" class="mb-3">
-                        <div class="input-group">
-                            <input placeholder="Please add a review" type="text" class="form-control" name="review">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-primary">Submit</button>
-                            </div>
-                        </div>
-                        <input type="hidden" name="bookId" value="<%= book._id %>">
-                    </form>
-                    <div class="col-12">
-                        <% for(review of reviews) { %>
-                            <div class="row">
-                                <div class="col-2">
-                                    <img width="50px" class="rounded-circle" src="/<%= review.userId.profileImage %>">
-                                </div>
-                                <div class="col-10">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <h5> <%= review.userId.username.toUpperCase() %> </h5>
-                                        </div>
-                                        <div class="col-6">
-                                            <i class="text-muted text-right"><i class="far fa-clock"></i> <%= moment(review.updatedAt.getTime()).fromNow() %></i>
-                                        </div>
-                                    </div>
-                                    <p> <%= review.review %> </p>
-                                </div>
-                            </div>
-                        <% } %>
-                    </div>
-
-
-                </div>
-            </div>
-            <div class="m-auto text-center">
-                <a href="/edit-book/<%=book._id%>" type="button" class="btn btn-lg btn-outline-secondary text-center">Edit</a>
-                <form action="/delete-book/<%= book._id %>" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-lg btn-outline-danger text-center">Delete</button>
-                </form>
             </div>
         </div>
-    </main>
+    </section>
+      <!-- Breadcrumb -->
+    <section id="bc" class="mt-3">
+      <div class="container">
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/books">Featured Books</a>
+            </li>
+            <li class="breadcrumb-item active"><%= book.title %></li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+    <main>
+        <div class="container py-2">
+            <a href="/books" class="btn btn-light mb-4">Back To Featured Books</a>
+            <div class="row">
+                <div class="col-md-9">
+                     <img src="/<%=book.image %>" alt="" class="img-main img-fluid mb-3">
+                     <div class="row mb-2 fields">
+                        <div class="col-md-6">
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-secondary">
+                                <i class="fas fa-book-open"></i> Type:
+                              <span class="float-right"><%= book.type %></span>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                              <i class="fas fa-bed"></i> Status
+                              <span class="float-right">Available</span>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                                <i class="fas fa-star"></i> Average Rating
+                                <span class="float-right"><% if(book.averageRatings.toString().length == 1) { %>
+                                    <%=book.averageRatings%>.0
+                                <% } else { %>
+                                  <%=book.averageRatings%>
+                                <% } %>
+                                </span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col-md-6">
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-secondary">
+                              <i class="fas fa-th-large"></i> No. of Reviews
+                              <span class="float-right"><%= reviews.length %></span>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                                <i class="fas fa-clock"></i> Date Submitted
+                              <span class="float-right"> <%= moment(book.createdAt.getTime()).fromNow() %>
+                              </span>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                              <i class="fas fa-user"></i> Submitted By
+                              <span class="float-right"> <%= book.userId.username %>
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <!-- Description -->  
+                    <div class="row mb-2">
+                        <!-- <i class="fas fa-bed"></i> Description -->
+                        <div class="col-md-12 list-group-item text-secondary p-3">
+                            <p><%= book.description %></p>
+                        </div>
+                    </div>
+                    <div class="py-3 text-center">
+                      <% if (isAuthenticated) { %>
+                        <% if (!hasReview) { %>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#submitReview">
+                              Submit a Review
+                          </button>
+                        <% } else { %>
+                          <a href="/book/<%= book._id %>/<%= review._id %>/edit-review" class="btn btn-primary">
+                            Edit Your Review
+                          </a>
+                        <% } %>
+                      <% } %>
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewReviews">
+                        View all Reviews
+                      </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card mb-3">
+                    <img class="card-img-top" src="/<%= book.userId.profileImage %>" alt="Seller of the month">
+                      <div class="card-body">
+                        <h5 class="card-title">Book Owner</h5>
+                        <h6 class="text-secondary"><%= book.userId.username %></h6>
+                      </div>
+                  </div>
+                  <button class="btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal">Make An Inquiry</button>
+                </div>
+              </div>
+              <% if(ownedBook) { %>
+                <div class="m-auto text-center">
+                  <a href="/edit-book/<%=book._id%>" type="button" class="btn btn-lg btn-outline-secondary text-center">Edit</a>
+                    <form action="/delete-book/<%= book._id %>" method="POST" class="d-inline">
+                      <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                      <button type="submit" class="btn btn-lg btn-outline-danger text-center">Delete</button>
+                    </form>
+                </div>
+              <% } %>
+            </div>
+
+<!-- Modal -->
+<div class="modal fade" id="submitReview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reviews</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form action="/book/<%=book._id%>/add-review?edit=false" method="POST" class="mb-3">
+            <div class="form-group">
+                <label for="review-text">Add Review</label>
+                <textarea class="form-control" id="review-text" rows="3" name="reviewText" placeholder="Add Review"></textarea>
+            </div>
+            <div class="form-group">
+                <fieldset class="starability-basic">
+                    <legend>Add Rating</legend>
+                    <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                    <input type="radio" id="rate1" name="rating" value="1" />
+                    <label for="rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="rate2" name="rating" value="2" />
+                    <label for="rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="rate3" name="rating" value="3" />
+                    <label for="rate3" title="Average">3 stars</label>
+                    <input type="radio" id="rate4" name="rating" value="4" />
+                    <label for="rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="rate5" name="rating" value="5" />
+                    <label for="rate5" title="Amazing">5 stars</label>
+                </fieldset>
+            </div>
+            <input type="hidden" name="bookId" value="<%= book._id %>">
+            <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="viewReviews" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">All Reviews</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="col-12">
+              <% if(reviews.length > 0) { %>
+                <% for(review of reviews) { %>
+                  <div class="row">
+                      <div class="col-2">
+                          <img width="50px" class="rounded-circle" src="/<%= review.userId.profileImage %>">
+                      </div>
+                      <div class="col-10">
+                          <div class="row">
+                              <div class="col-6">
+                                  <h5> <%= review.userId.username.toUpperCase() %> </h5>
+                              </div>
+                              <div class="col-6">
+                                  <i class="text-muted text-right"><i class="far fa-clock"></i> <%= moment(review.updatedAt.getTime()).fromNow() %></i>
+                              </div>
+                          </div>
+                          <p> <%= review.text %> <i class="text-right"><% for(let i=1; i <= Number(review.rating); i++) { %>
+                            <i class="fas fa-star text-warning"></i></i>
+                          <% } %> </p>
+                          <% if (review.userId._id.toString() === loggedInUser ) { %>
+                            <div class="pb-4">
+                              <a href="/book/<%= book._id %>/<%= review._id %>/edit-review" class="btn btn-sm btn-outline-warning">
+                                Edit
+                              </a>
+                              <form action="/book/<%= book._id %>/<%= review._id %>/delete-review" method="POST" class="d-inline">
+                                <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                              </form>
+                            </div>
+                         <% }%>
+                          </div>
+                  </div>
+              <% } %> %>
+              <% } else { %>
+                <h3> This book has no review yet.</h3>
+              <% } %>
+                <div class="text-right">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+      </div>
+    </div>
+  </div>
+        </div> 
+    </main>
     
 
 

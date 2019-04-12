@@ -3,9 +3,9 @@
   }
 
 
-body {
+/* body {
     margin-top: 150px;
-}
+} */
 
 
 .navbar {
@@ -24,3 +24,23 @@ body {
     object-fit: cover;
 }
 
+#showcase-inner {
+    background: url('/images/bookooh2.jpg') no-repeat bottom center fixed/cover;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+#showcase-inner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-height: 100%;
+      width: 100%;
+      background: rgb(58, 70, 96, 0.3)
+}
+
+.listing-preview a {
+    position: relative; 
+}

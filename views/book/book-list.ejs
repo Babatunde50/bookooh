@@ -2,8 +2,32 @@
 
 <body>
     <%- include('../includes/nav.ejs') %>
+    <section id="showcase-inner" class="py-5 text-white">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-12">
+                      <h1 class="display-4">Browse Our Books</h1>
+                      <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt, pariatur!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+          <!-- Breadcrumb -->
+        <section id="bc" class="mt-3">
+          <div class="container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a href="/">
+                    <i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="breadcrumb-item active">Featured Books</li>
+              </ol>
+            </nav>
+          </div>
+        </section>
     <main>
-        <div class="container">
+        <div class="container py-2">
                 <% if(message.length > 0) { %>
                     <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
                             <%= message %>
@@ -11,29 +35,42 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                     </div>
-               <% } %>
+               <% } %>          
             <% if(books.length > 0) { %>
-            <h1>All Books</h1>
             <div class="row">
                 <% for(book of books) { %>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="card">
-                            <img src="<%=book.image %>" alt="image" class="img-fluid card-img-top">
-                             <div class="card-body">
-                                <h5 class="card-title text-center"> <%= book.title %> </h5>
-                                <p class="card-text"><%= book.description.substring(0, 50) %> ... </p>
-                                <p class="card-text text-muted text-right"> Book Type: <%= book.type %></p>
-                                <div class="text-center">
-                                    <a href="/book/<%=book._id%>" class="btn btn-outline-primary text-center">View Details</a>
+                    <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card listing-preview">
+                              <img class="card-img-top" src="<%=book.image %>" alt="book">
+                              <div class="card-img-overlay">
+                                <h2>
+                                  <span class="badge badge-primary text-white"><%=book.type %></span>
+                                </h2>
+                              </div>
+                              <div class="card-body">
+                                <div class="listing-heading text-center">
+                                  <h4 class="text-primary"><%=book.title %></h4>
+                                  <p>
+                                    <i class="fas fa-map-marker text-secondary"></i>Book Location</p>
                                 </div>
+                                <hr>
+                                <div class="row py-2 text-secondary">
+                                  <div class="col-12">
+                                    <i class="fas fa-user"></i> <%=book.userId.username %> </div>
+                                </div>
+                                <div class="row text-secondary pb-2">
+                                  <div class="col-6">
+                                    <i class="fas fa-clock"></i> <%= moment(book.createdAt.getTime()).fromNow() %></div>
+                                </div>
+                                <hr>
+                                <a href="/book/<%=book._id%>" class="btn btn-primary btn-block">More Info</a>
+                              </div>
                             </div>
-                            <div class="card-footer text-center text-muted">
-                                Last Edited: <b> <%= moment(book.updatedAt.getTime()).fromNow() %> </b>
-                            </div>
-                        </div>
-                    </div>
+                          </div>
+        
                 <%}%>
             </div>
+            
 
         </div>
        <% } else { %>
