@@ -1,8 +1,30 @@
-<%- include('includes/head.ejs') %>
+<%- include('./includes/head.ejs') %>
 
 <body>
-    <h1>An error occur and we are currently working on it.</h1>
+  <%- include('./includes/nav.ejs') %>
+  <main class="py-5">
+    <section id="login" class="py-5 mb-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="error-template">
+                            <h1>
+                                Oops!</h1>
+                            <h2>
+                                500 Internal Server Error </h2>
+                            <div class="error-details">
+                                Sorry, there is an internal server error, and we are currently working on it.
+                            </div>
+                            <div class="error-actions mx-auto">
+                                <a href="/" class="btn btn-primary btn-lg"><span class="fas fa-home"></span>
+                                    Take Me Home </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+  </main>
 
-   
-
-<%- include('includes/footer.ejs') %>
+  <%- include('./includes/footer.ejs') %>
+</body>

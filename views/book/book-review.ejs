@@ -43,7 +43,7 @@
                             <div class="card-body">
                                 <form action="/book/<%=book._id%>/edit-review?" method="POST" class="mb-3">
                                     <div class="form-group">
-                                        <textarea class="form-control" id="review-text" rows="3" name="reviewText" placeholder="Add Review"><%= review.text %></textarea>
+                                        <textarea class="form-control" id="review-text" rows="3" name="reviewText" placeholder="Must be at least 2 characters long" required minlength="2"><%= review.text %></textarea>
                                     </div>
                                         <div class="form-group">
                                             <fieldset class="starability-basic">

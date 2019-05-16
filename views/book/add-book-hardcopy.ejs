@@ -1,0 +1,76 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+    <%- include('../includes/nav.ejs') %>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4><i class="fas fa-book-open"></i>  <%= editing ? "Edit Book" : "Add Book" %></h4>
+                    </div>
+                    <form action="<%if(editing) { %>/edit-hardcopy/<%=book._id %><% } else { %>/add-hardcopy<%} %>" method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="">Title</label>
+                                <input required type="text" class="form-control <%= validationErrors.find(e => e.param === 'title') ? 'border border-danger' : '' %>" name="title" value="<%if(editing && oldInput.title){ %><%= oldInput.title %><% } else if(editing) { %><%=book.title%><% } else { %><%= oldInput.title %><% } %>" >
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'title') ? 'display-invalid-message' : '' %>">              
+                                        <%= validationErrors.findIndex(e => e.param === 'title') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'title')].msg %>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <select class="custom-select <%= validationErrors.find(e => e.param === 'location') ? 'border border-danger' : '' %>" name="location" value="<% if(editing) { %><%= book.location %><% }%>" id="location">
+                                    <option value="null">Open this select menu</option>
+                                    <option value="Tedder Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Tedder Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Tedder Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Tedder Hall' && 'selected' %><% } %> > Tedder Hall </option>
+                                    <option value="Kuti Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Kuti Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Kuti Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Kuti Hall' && 'selected' %><% } %> > Kuti Hall</option>
+                                    <option value="Sultan Bello Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Sultan Bello Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Sultan Bello Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Sultan Bello Hall' && 'selected' %><% } %> >Sultan Bello Hall</option>
+                                    <option value="Queen Elizabeth II Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Queen Elizabeth II Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Queen Elizabeth II Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Queen Elizabeth II Hall' && 'selected' %><% } %>  >Queen Elizabeth II Hall</option>
+                                    <option value="Alexander Brown Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Alexander Brown Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Alexander Brown Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Alexander Brown Hall' && 'selected' %><% } %> >Alexander Brown Hall</option>
+                                    <option value="Independence Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Independence Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Independence Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Independence Hall' && 'selected' %><% } %>>Independence Hall</option>
+                                    <option value="Nnamdi Azikwe Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Nnamdi Azikiwe Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Nnamdi Azikiwe Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Nnamdi Azikiwe Hall' && 'selected' %><% } %>>Nnamdi Azikiwe Hall</option>
+                                    <option value="Idia Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Idia Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Idia Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Idia Hall' && 'selected' %><% } %> >Idia Hall</option>
+                                    <option value="Obafemi Awolowo Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Obafemi Awolowo Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Obafemi Awolowo Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Obafemi Awolowo Hall' && 'selected' %><% } %>>Obafemi Awolowo Hall</option>
+                                    <option value="Tafawa Balewa Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Tafawa Balewa Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Tafawa Balewa Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Tafawa Balewa Hall' && 'selected' %><% } %>>Tafawa Balewa Hall</option>
+                                    <option value="Abdulsalami Abubakar Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Abdulsalami Abubakar Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Abdulsalami Abubakar Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Abdulsalami Abubakar Hall' && 'selected' %><% } %>>Abdulsalami Abubakar Hall</option>
+                                </select>
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'location') ? 'display-invalid-message' : '' %>">              
+                                        <%= validationErrors.findIndex(e => e.param === 'location') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'location')].msg %>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Upload Image</label>
+                                <input required type="file" class="form-control-file mb-2 <%= validationErrors.find(e => e.param === 'image') ? 'border border-danger' : '' %>" id="image" name="image" value="<% if(editing) { %><%= book.image %><% }%>">
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'image') ? 'display-invalid-message' : '' %>">              
+                                        <%= validationErrors.findIndex(e => e.param === 'image') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'image')].msg %>
+                                </div>   
+                            </div>
+                            <div class="form-group">
+                                <label for="body">Description</label>
+                                <textarea required name="description" id="body" class="form-control <%= validationErrors.find(e => e.param === 'description') ? 'border border-danger' : '' %>"><%if(editing && oldInput.description){ %><%= oldInput.description %><% } else if(editing) { %><%=book.description%><% } else { %><%= oldInput.description %><% } %></textarea>
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'description') ? 'display-invalid-message' : '' %>">              
+                                        <%= validationErrors.findIndex(e => e.param === 'description') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'description')].msg %>
+                                </div>
+                            </div>
+                            <% if(editing) { %>
+                                <div class="form-group">
+                                    <label for="location">Book Status </label>
+                                    <select class="custom-select" name="available" value="<% if(editing) { %><%= book.available %><% }%>">
+                                        <option value="true">Available</option>
+                                        <option value="false">Not Available</option>
+                                    </select>
+                                </div>
+                            <% } %>
+                        </div>
+                        <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+<%- include('../includes/footer.ejs') %>

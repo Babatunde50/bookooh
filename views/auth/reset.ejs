@@ -1,0 +1,46 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+  <%- include('../includes/nav.ejs') %>
+  <main class="py-4">
+    <section id="login" class="py-5 mb-5">
+      <div class="container py-5">
+        <div class="row">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                <h4><i class="fas fa-sign-in-alt"></i> Reset Password</h4>
+              </div>
+              <div class="card-body">
+                <form action="/auth/reset" method="POST">
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                      type="email"
+                      class="form-control <%= errorMessage ? 'border border-danger' : '' %>"
+                      name="email"
+                      id="email"
+                      value="<%=oldInput.email %>"
+                      required
+                    />
+                    <div class="invalid-feedback <%=errorMessage ? 'display-invalid-message' : '' %>">
+                        <%= errorMessage %> 
+                    </div>
+                  </div>
+                  <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                  <input
+                    type="submit"
+                    value="Reset Password"
+                    class="btn btn-primary btn-block"
+                  />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('../includes/footer.ejs') %>
+</body>

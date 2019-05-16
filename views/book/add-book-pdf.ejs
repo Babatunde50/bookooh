@@ -1,0 +1,54 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+    <%- include('../includes/nav.ejs') %>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4><i class="fas fa-book-open"></i> <%= editing ? "Edit Book" : "Add Book" %></h4>
+                    </div>
+                    <form action="<%if(editing) { %>/edit-pdf/<%=book._id %><% } else { %>/add-pdf<%} %>" method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="">Title</label>
+                                <input type="text" class="form-control <%= validationErrors.find(e => e.param === 'title') ? 'border border-danger' : '' %>" name="title" value="<%if(editing && oldInput.title){ %><%= oldInput.title %><% } else if(editing) { %><%=book.title%><% } else { %><%= oldInput.title %><% } %>">
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'title') ? 'display-invalid-message' : '' %>">              
+                                        <%= validationErrors.findIndex(e => e.param === 'title') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'title')].msg %>
+                                </div>             
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Upload Image</label>
+                                <input type="file" class="form-control-file mb-2 <%= validationErrors.find(e => e.param === 'image') ? 'border border-danger' : '' %>" id="image" name="image" value="<% if(editing) { %><%= book.image %><% }%>">
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'image') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'image') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'image')].msg %>
+                                </div> 
+                            </div>
+                            <div class="form-group">
+                                <label for="pdf">Upload PDF file</label>
+                                <input type="file" class="form-control-file mb-2 <%= validationErrors.find(e => e.param === 'pdf') ? 'border border-danger' : '' %>" id="pdf" name="pdf" value="<% if(editing) { %><%= book.pdf %><% }%>">
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'pdf') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'pdf') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'pdf')].msg %>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="body">Description</label>
+                                <textarea name="description" id="body" class="form-control <%= validationErrors.find(e => e.param === 'description') ? 'border border-danger' : '' %>"><%if(editing && oldInput.description){ %><%= oldInput.description %><% } else if(editing) { %><%=book.description%><% } else { %><%= oldInput.description %><% } %></textarea>
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'description') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'description') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'description')].msg %>
+                                </div>      
+                            </div>
+                        </div>
+                        <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+<%- include('../includes/footer.ejs') %>

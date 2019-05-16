@@ -2,28 +2,56 @@
     --main-color: #3a4660; 
   }
 
+  body { 
+    background-image: url("/images/background.png")
+  }
 
-.navbar {
-    box-shadow: 2px 2px 2px #000;
-    opacity: 0.9;
-    background: var(--main-color);
+  .main-header__brand {
+    color: #0e4f1f;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 25px;
+    height: 25px;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.navbar .nav-item {
-    font-size: 1.4rem;
-    padding-right: 1.4rem;
+.main-header__brand img {
+  height: 100%;
+  vertical-align: top !important;
+}
+
+.navbar-brand {
+    display: inline-block;
+    width: 120px;
+    height: auto;
+    background-image:none;
+}
+
+.logo {
+    width: 100%;
+    background: #3a4660;
 }
 
 #home-section {
-    background: url('/images/home.jpg');
+    background: url('/images/home.jpg') center/cover;
+    filter: grayscale(30%);
     background-repeat: no-repeat;
-    background-size: cover;
     background-attachment: fixed;
-    min-height: 700px;
+    min-height: 600px;
+    position: relative;
 }
 
-#home-section .home-inner {
-    padding-top: 150px;
+.home-inner {
+    min-height: 400px;
+    width: 80%;
+    background: rgba(51, 51, 51, 0.9);
+    position: absolute;
+    top: 15%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 1.2rem;
 }
 
 #home-section .fas {
@@ -32,4 +60,33 @@
     padding: 5px;
     border-radius: 5px;
 
+}
+
+.card .card-img-top {
+    height: 15rem;
+    object-fit: cover;
+}
+
+#services {
+    background: url('/images/bookooh-services.jpg') no-repeat top center fixed/cover;
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+#services::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100%;
+    width: 100%;
+    background: rgba(58, 70, 96, 0.8);
+}
+
+@media(max-width: 640px) {
+    .home-inner {
+        width: 100%;
+        top: 30px;
+    }
 }

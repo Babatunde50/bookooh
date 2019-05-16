@@ -1,0 +1,149 @@
+<%- include('../includes/head.ejs') %>
+
+<body>
+    <% if(successMessage ) { %>
+      <div class="alert text-center alert-success alert-dismissible fade show mb-0" role="alert">
+          <strong><%= successMessage %></strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    <% } %>
+  <%- include('../includes/nav.ejs') %>
+  <header id="main-header" class="py-2 bg-info text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1><i class="fas fa-user"></i>Edit Your Profile</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ACTIONS -->
+  <section id="actions" class="py-4 mb-4 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <a href="/" class="btn mb-2 btn-light btn-block">
+            <i class="fas fa-arrow-left"></i>Back to Featured Books
+          </a>
+        </div>
+        <div class="col-md-3 mb-2">
+          <a href="/profile/edit/reset-password" class="btn btn-success btn-block">
+            <i class="fas fa-lock"></i>Change Password
+          </a>
+        </div>
+        <div class="col-md-3 mb-2">
+          <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#exampleModal">
+              <i class="fas fa-trash"></i>Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile">
+    <div class="container pb-5 pt-2">
+        <div class="row">
+            <div class="col-md-9 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Edit Your Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="/profile/edit/username" method="POST">
+                            <label for="name">Username</label>
+                            <div class="input-group mb-3">
+                              <input type="text" name="username" class="form-control <%= errorLocation === 'username' && 'border border-danger' %> " value="<%= user.username %>">
+                              <input type="hidden" name="formal" value="<%= user.username %>">
+                              <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">Update</button>
+                              </div>
+                              <div class="invalid-feedback <%= errorLocation === 'username'  ? 'display-invalid-message' : '' %>">
+                                  <%= errorMessage %>
+                              </div>
+                            </div>
+                        </form>
+                        <form action="/profile/edit/email" method="POST">
+                            <label for="name">Email</label>
+                            <div class="input-group mb-3">
+                              <input type="email" name="email" class="form-control <%= errorLocation === 'email' && 'border border-danger' %>" value="<%= user.email %>">
+                              <input type="hidden" name="formal" value="<%= user.email %>">
+                              <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">Update</button>
+                              </div>
+                              <div class="invalid-feedback <%= errorLocation === 'email'  ? 'display-invalid-message' : '' %>">
+                                  <%= errorMessage %>
+                              </div>
+                            </div>
+                        </form>
+                        <form action="/profile/edit/mobile" method="POST">
+                            <label for="name">Mobile Number</label>
+                            <div class="input-group mb-3">
+                                <input type="mobile" name="mobile" class="form-control <%= errorLocation === 'mobile' && 'border border-danger' %>" value="<%= user.mobile  %>">
+                                <input type="hidden" name="formal" value="<%= user.mobile %>">
+                                <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">Update</button>
+                              </div>
+                              <div class="invalid-feedback <%= errorLocation === 'mobile'  ? 'display-invalid-message' : '' %>">
+                                  <%= errorMessage %>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <img src="/<%= user.profileImage ? user.profileImage : 'images/default_avatar.png' %>" alt="image" class="d-block img-fluid mb-3">
+                <form action="/profile/edit-image" method="POST" enctype="multipart/form-data">
+                  <input type="file" class="form-control-file mb-2 <%= errorLocation === 'image' && 'border border-danger' %>" id="image" name="image" required>
+                  <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                  <button type="submit" class="btn btn-primary btn-block"> Edit Image </button>
+                  <div class="invalid-feedback <%= errorLocation === 'image'  ? 'display-invalid-message' : '' %>">
+                      <%= errorMessage %>
+                  </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger" id="exampleModalLabel">Warning</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span class="text-white" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body bg-danger text-white">
+          <p>You are going to absolutely delete everything you've done in BookOoh! Your reviews, books, profile... everything.
+            This can't be undone. So please be very sure before you do this.
+          </p>
+          <p>
+              <strong>Just need to change your username or password?</strong>  You can do that without deleting your account right on this page.
+          </p>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form action="/profile/delete" method="POST" class="d-inline">
+              <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+              <button type="submit" class="btn btn-danger">Delete My Account</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<%- include('../includes/footer.ejs') %>

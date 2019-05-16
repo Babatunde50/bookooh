@@ -11,20 +11,15 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    gender: {
+    mobile: {
         type: String,
-        required: true
+        require: true
     },
     profileImage: {
-        type: String,
-        required: true
+        type: String
     },
     password: {
         type: String,
-        required: true
-    },
-    verified: {
-        type: Boolean,
         required: true
     },
     booksId: [{
@@ -32,8 +27,8 @@ const userSchema = new Schema({
         ref: 'Book',
         required: true
     }],
-    verifyToken: String,
-    verifyTokenExpiration: Date
+    resetToken: String,
+    resetTokenExpiration: Date
 });
 
 module.exports = mongoose.model('User', userSchema);

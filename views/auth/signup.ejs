@@ -3,54 +3,64 @@
 <body>
     <%- include('../includes/nav.ejs') %>
     <main>
+        <div class="py-5">
        <div class="container">
-           <% if(errorMessage) { %>
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-                        <%= errorMessage %>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-           <% } %>
+           <div class="row">
            <div class="col-md-6 mx-auto">
                <form action="/auth/signup" method="POST">
                     <div class="card">
-                            <div class="card-header">
-                              <h1 class="text-center">Sign Up</h1>
+                            <div class="card-header bg-primary text-white">
+                                <h4><i class="fas fa-user-plus"></i> Register</h4>
                             </div>
                            <div class="card-body">
                                 <div class="form-group">
                                     <label for="username">Username</label>
-                                    <input type="text" class="form-control <%= validationErrors.find(e => e.param === 'username') ? 'border border-danger' : '' %>" name="username" id="username" value="<%=oldInput.username %>">
+                                    <input required type="text" class="form-control <%= validationErrors.find(e => e.param === 'username') ? 'border border-danger' : '' %>" name="username" id="username" value="<%=oldInput.username %>">
+                                    <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'username') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'username') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'username')].msg %>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border border-danger' : '' %>" name="email" id="email" value="<%=oldInput.email %>" >
+                                    <input required type="email" class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border border-danger' : '' %>" name="email" id="email" value="<%=oldInput.email %>" >
+                                    <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'email') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'email') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'email')].msg %>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="gender">Gender</label>
-                                    <select class="form-control" id="gender" name="gender">
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
+                                    <label for="email">Mobile Number <strong>(Secured)</strong></label>
+                                    <input required type="text" class="form-control <%= validationErrors.find(e => e.param === 'mobile') ? 'border border-danger' : '' %>" name="mobile" id="mobile" value="<%=oldInput.mobile %>" >
+                                    <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'mobile') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'mobile') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'mobile')].msg %>
+                                    </div>
+                                    <small class="text-muted">This won't be visible to anyone</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>" name="password" id="password" value="<%=oldInput.password %>" >
+                                    <input required type="password" class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>" name="password" id="password" value="<%=oldInput.password %>" >
+                                    <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'password') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'password') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'password')].msg %>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="confirmPassword">Confirm Password</label>
-                                    <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'confirmPassword') ? 'border border-danger' : '' %>" name="confirmPassword" id="confirmPassword" value="<%=oldInput.confirmPassword %>" >
+                                    <input required type="password" class="form-control <%= validationErrors.find(e => e.param === 'confirmPassword') ? 'border border-danger' : '' %>" name="confirmPassword" id="confirmPassword" value="<%=oldInput.confirmPassword %>" >
+                                    <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'confirmPassword') ? 'display-invalid-message' : '' %>">
+                                        <%= validationErrors.findIndex(e => e.param === 'confirmPassword') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'confirmPassword')].msg %>
+                                    </div>
                                 </div>
+                                <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                           <button type="submit" class="btn btn-primary btn-block">Register</button>
                            </div>
-                           <input type="hidden" value="<%= csrfToken %>" name="_csrf">
-                           <div class="card-footer">
-                               <button type="submit" class="btn btn-primary btn-block">Submit</button>
-                           </div>
+                           <div class="text-center pb-2">
+                                <a href="/auth/login"> Already have an account ?  </a>
+                            </div>
                           </div>
                        </div>
                </form>
        </div>
+    </div>
+    </div>
     </main>
     
 

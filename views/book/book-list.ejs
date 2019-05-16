@@ -1,15 +1,33 @@
 <%- include('../includes/head.ejs') %>
 
 <body>
+    <% if(successMessage ) { %>
+      <div class="alert text-center alert-success alert-dismissible fade show mb-0" role="alert">
+          <strong><%= successMessage %></strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    <% } %>
     <%- include('../includes/nav.ejs') %>
     <section id="showcase-inner" class="py-5 text-white">
             <div class="container">
                 <div class="row text-center">
                     <div class="col-md-12">
                       <h1 class="display-4">Browse Our Books</h1>
-                      <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt, pariatur!</p>
+                      <p class="lead">We've got some awesome books you can get for free</p>
                     </div>
                 </div>
+                <div class="col-md-6 ml-auto">
+                <form action="/books" method="GET">
+                    <div class="input-group">
+                      <input type="text" name="search" class="form-control" placeholder="Search for over <%= books.length %> books...">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+              </div>
             </div>
         </section>
           <!-- Breadcrumb -->
@@ -27,21 +45,13 @@
           </div>
         </section>
     <main>
-        <div class="container py-2">
-                <% if(message.length > 0) { %>
-                    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-                            <%= message %>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                    </div>
-               <% } %>          
+        <div class="container py-2">        
             <% if(books.length > 0) { %>
             <div class="row">
                 <% for(book of books) { %>
                     <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card listing-preview">
-                              <img class="card-img-top" src="<%=book.image %>" alt="book">
+                              <img class="card-img-top" src="/<%=book.image %>" alt="book">
                               <div class="card-img-overlay">
                                 <h2>
                                   <span class="badge badge-primary text-white"><%=book.type %></span>
@@ -49,18 +59,22 @@
                               </div>
                               <div class="card-body">
                                 <div class="listing-heading text-center">
-                                  <h4 class="text-primary"><%=book.title %></h4>
-                                  <p>
-                                    <i class="fas fa-map-marker text-secondary"></i>Book Location</p>
+                                  <h4 class="text-primary"><%= book.title.length > 30 ? book.title.slice(0,30) + "..." : book.title %></h4>
                                 </div>
                                 <hr>
                                 <div class="row py-2 text-secondary">
                                   <div class="col-12">
-                                    <i class="fas fa-user"></i> <%=book.userId.username %> </div>
+                                    <strong><a href="/profile/books/<%=book.userId._id%>"><i class="fas fa-user"></i> <%=book.userId.username %></a> </strong>
+                                  </div>
                                 </div>
-                                <div class="row text-secondary pb-2">
-                                  <div class="col-6">
-                                    <i class="fas fa-clock"></i> <%= moment(book.createdAt.getTime()).fromNow() %></div>
+                                <div class="row py-2 text-secondary">
+                                  <div class="col-12">
+                                    <strong><i class="fas fa-fire"></i> <%= book.available ? "Available" : "Not Available" %> %></strong>
+                                  </div>
+                                </div>
+                                <div class="row text-secondary py-2 pb-2">
+                                  <div class="col-12">
+                                    <i class="fas fa-clock"></i> <%= moment(book.createdAt.getTime()).fromNow() %> </div>
                                 </div>
                                 <hr>
                                 <a href="/book/<%=book._id%>" class="btn btn-primary btn-block">More Info</a>
@@ -70,14 +84,38 @@
         
                 <%}%>
             </div>
-            
-
+            <% if(showPagination) { %>
+            <nav>
+                <ul class="pagination justify-content-center">
+                  <%if (currentPage !== 1 && previousPage !== 1) { %> 
+                    <li class="page-item"><a class="page-link" href="/books/?page=1">1</a></li>
+                  <% } %>
+                  <%if (hasPreviousPage) { %> 
+                    <li class="page-item"><a class="page-link" href="/books/?page=<%= previousPage %>"><%= previousPage %></a></li>
+                    <% } %>
+                  <li class="page-item active"><a class="page-link" href="/books/?page=<%= currentPage %>"><%= currentPage %></a></li>
+                  <%if (hasNextPage) { %> 
+                  <li class="page-item"><a class="page-link" href="/books/?page=<%= nextPage %>"><%= nextPage %></a></li>
+                  <% } %>
+                  <%if (lastPage !== currentPage && nextPage !== lastPage) { %> 
+                  <li class="page-item"><a class="page-link" href="/books/?page=<%= lastPage %>"><%= lastPage %></a></li>
+                  <% } %>
+                </ul>
+            </nav>
+             <% } %>
         </div>
        <% } else { %>
-            <h1> No Book is found </h1>
+        <div class="text-center py-5" style="margin-bottom: 150px">
+            <% if(notFound) { %>
+              <h4> <%= notFound %> </h4>
+              <a href="/books" class="btn btn-light mb-4">View all Featured Books</a>
+            <% } else { %>
+              <h4>Book's list is empty for now</h4>
+            <% } %>
+        </div>  
         <% } %>
     </main>
-    
+        
 
 
 <%- include('../includes/footer.ejs') %>

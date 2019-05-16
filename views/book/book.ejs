@@ -1,13 +1,25 @@
 <%- include('../includes/head.ejs') %>
 
 <body>
+    <% if(successMessage ) { %>
+      <div class="alert text-center alert-success alert-dismissible fade show mb-0" role="alert">
+          <strong><%= successMessage %></strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+    <% } %>
     <%- include('../includes/nav.ejs') %>
     <section id="showcase-inner" class="py-5 text-white">
         <div class="container">
             <div class="row text-center">
                 <div class="col-md-12">
                   <h1 class="display-4"><%= book.title %></h1>
-                  <p class="lead"><i class="fas fa-map-marker text-primary"></i> Book Location</p>
+                  <% if(book.type !== "pdf") { %>
+                    <button type="button" class="btn btn-link text-white" data-toggle="modal" data-target="#mapModal">
+                        <i class="fas fa-map-marker text-primary"></i>  View location
+                    </button>
+                  <% } %>
                 </div>
             </div>
         </div>
@@ -42,8 +54,8 @@
                               <span class="float-right"><%= book.type %></span>
                             </li>
                             <li class="list-group-item text-secondary">
-                              <i class="fas fa-bed"></i> Status
-                              <span class="float-right">Available</span>
+                              <i class="fas fa-fire"></i> Status
+                              <span class="float-right"><%= book.available ? "Available" : "Not Available" %> %></span> 
                             </li>
                             <li class="list-group-item text-secondary">
                                 <i class="fas fa-star"></i> Average Rating
@@ -59,30 +71,35 @@
                         <div class="col-md-6">
                           <ul class="list-group list-group-flush">
                             <li class="list-group-item text-secondary">
-                              <i class="fas fa-th-large"></i> No. of Reviews
+                              <i class="fas fa-sort-numeric-up"></i> No. of Reviews
                               <span class="float-right"><%= reviews.length %></span>
                             </li>
                             <li class="list-group-item text-secondary">
-                                <i class="fas fa-clock"></i> Date Submitted
+                                <i class="fas fa-clock"></i> Time Submitted
                               <span class="float-right"> <%= moment(book.createdAt.getTime()).fromNow() %>
                               </span>
                             </li>
                             <li class="list-group-item text-secondary">
                               <i class="fas fa-user"></i> Submitted By
-                              <span class="float-right"> <%= book.userId.username %>
+                              <span class="float-right"> <a href="/profile/books/<%=book.userId._id%>"> <%= book.userId.username.toUpperCase() %> </a>
                               </span>
                             </li>
                           </ul>
                         </div>
                       </div>
                       <!-- Description -->  
-                    <div class="row mb-2">
-                        <!-- <i class="fas fa-bed"></i> Description -->
+                    <div class="row px-3 mb-2">
                         <div class="col-md-12 list-group-item text-secondary p-3">
-                            <p><%= book.description %></p>
+                            <p> <i class="fas fa-pencil-alt"></i> Description </p>
+                            <p><%- book.description %></p>
                         </div>
+                        <% if(book.type === "pdf") { %>
+                        <div class="my-3 ml-auto">
+                          <%= book.downloads%> download(s) <a class="btn btn-outline-primary" href="/book/download/<%=book._id%>"><i class="fas fa-download"></i> Download</a>
+                        </div>
+                        <% } %>
                     </div>
-                    <div class="py-3 text-center">
+                    <div class="pb-3 pt-1 text-center">
                       <% if (isAuthenticated) { %>
                         <% if (!hasReview) { %>
                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#submitReview">
@@ -101,25 +118,55 @@
                 </div>
                 <div class="col-md-3">
                   <div class="card mb-3">
-                    <img class="card-img-top" src="/<%= book.userId.profileImage %>" alt="Seller of the month">
+                    <img class="card-img-top" src="/<%= book.userId.profileImage ? book.userId.profileImage : 'images/default_avatar.png'  %>" alt="book owner">
                       <div class="card-body">
                         <h5 class="card-title">Book Owner</h5>
-                        <h6 class="text-secondary"><%= book.userId.username %></h6>
+                        <h6 class="text-secondary"><%= book.userId.username.toUpperCase() %></h6>
                       </div>
                   </div>
-                  <button class="btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal">Make An Inquiry</button>
+                  <% if(loggedInUser) { %>
+                    <% if(ownedBook) { %>
+                      <a href="/profile/books/<%=book.userId._id%>" class="btn-primary btn-block btn-lg text-center" style="text-decoration: none">View Your Book's</a>
+                    <% } else { %>
+                      <button class="btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal">Make An Inquiry</button>
+                   <% } %>
+                  <% } else { %>
+                    <a href="/profile/books/<%=book.userId._id%>" class="btn-primary btn-block btn-lg text-center" style="text-decoration: none">View All Books</a>
+                  <% } %>
                 </div>
               </div>
               <% if(ownedBook) { %>
-                <div class="m-auto text-center">
-                  <a href="/edit-book/<%=book._id%>" type="button" class="btn btn-lg btn-outline-secondary text-center">Edit</a>
+                <div class="text-center pt-2">
+                  <a href="/<%= book.type !== 'pdf' ? 'edit-hardcopy' : 'edit-pdf' %>/<%=book._id%>" class="btn btn-outline-secondary text-center">Edit</a>
                     <form action="/delete-book/<%= book._id %>" method="POST" class="d-inline">
                       <input type="hidden" value="<%= csrfToken %>" name="_csrf">
-                      <button type="submit" class="btn btn-lg btn-outline-danger text-center">Delete</button>
+                      <button type="submit" class="btn btn-outline-danger text-center">Delete</button>
                     </form>
                 </div>
               <% } %>
             </div>
+
+            <% if(book.type !== "pdf") { %>
+            <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Location</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p><strong><i class="fas fa-map-marker text-primary"></i> <%= book.location %></strong></p>
+                      <div id="map"></div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <%  } %>
 
 <!-- Modal -->
 <div class="modal fade" id="submitReview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -135,10 +182,10 @@
           <form action="/book/<%=book._id%>/add-review?edit=false" method="POST" class="mb-3">
             <div class="form-group">
                 <label for="review-text">Add Review</label>
-                <textarea class="form-control" id="review-text" rows="3" name="reviewText" placeholder="Add Review"></textarea>
+                <textarea required minlength="2" class="form-control" id="review-text" rows="3" name="reviewText" placeholder="Must be at least 2 characters long"></textarea>
             </div>
             <div class="form-group">
-                <fieldset class="starability-basic">
+                <fieldset aria-required="true" class="starability-basic">
                     <legend>Add Rating</legend>
                     <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
                     <input type="radio" id="rate1" name="rating" value="1" />
@@ -165,6 +212,35 @@
   </div>
 </div>
 
+<% if(book.type !== "pdf") { %>
+  <!-- Inquiry Modal -->
+  <div class="modal fade" id="inquiryModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inquiryModalLabel">Make An Inquiry</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/inquiry/<%= book._id %>" method="POST">
+            <div class="form-group">
+              <label for="message" class="col-form-label">Message(SMS):</label>
+              <textarea name="message" class="form-control" placeholder="<%= book.enquiriesNumber >= 2 ? 'The maximum enquire limit for this book has been reached. Please request for a different book.' : '' %>"></textarea>
+            </div>
+            <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+            <input type="hidden" value="<%= loggedInUser %>" name="loggedInUserId">
+            <input type="hidden" value="<%= book._id %>" name="bookId">
+            <hr>
+            <button type="submit" value="Send" <%= book.enquiriesNumber >= 2 && "disabled" %> class="btn btn-block btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
 <!-- Modal -->
 <div class="modal fade" id="viewReviews" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -181,26 +257,27 @@
                 <% for(review of reviews) { %>
                   <div class="row">
                       <div class="col-2">
-                          <img width="50px" class="rounded-circle" src="/<%= review.userId.profileImage %>">
+                          <img width="50px" class="rounded-circle" src="/<%= book.userId.profileImage ? book.userId.profileImage : 'images/default_avatar.png'  %>">
                       </div>
                       <div class="col-10">
                           <div class="row">
-                              <div class="col-6">
+                              <div class="col-12">
                                   <h5> <%= review.userId.username.toUpperCase() %> </h5>
                               </div>
-                              <div class="col-6">
-                                  <i class="text-muted text-right"><i class="far fa-clock"></i> <%= moment(review.updatedAt.getTime()).fromNow() %></i>
-                              </div>
                           </div>
-                          <p> <%= review.text %> <i class="text-right"><% for(let i=1; i <= Number(review.rating); i++) { %>
+                          <p style="margin-bottom: -5px;"> <%= review.text %></p>
+                          <i class="text-right"><% for(let i=1; i <= Number(review.rating); i++) { %>
                             <i class="fas fa-star text-warning"></i></i>
-                          <% } %> </p>
+                          <% } %>
                           <% if (review.userId._id.toString() === loggedInUser ) { %>
-                            <div class="pb-4">
+                            <div>
+                                <i class="text-muted text-right"><i class="far fa-clock"></i> <%= moment(review.updatedAt.getTime()).fromNow() %></i>
+                            </div>
+                            <div class="pb-4 py-2 text-left">
                               <a href="/book/<%= book._id %>/<%= review._id %>/edit-review" class="btn btn-sm btn-outline-warning">
                                 Edit
-                              </a>
-                              <form action="/book/<%= book._id %>/<%= review._id %>/delete-review" method="POST" class="d-inline">
+                              </a>
+                              <form action="/book/<%= book._id %>/<%= review._id %>/delete-review" method="POST" class="d-inline py-2">
                                 <input type="hidden" value="<%= csrfToken %>" name="_csrf">
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                               </form>
@@ -221,6 +298,36 @@
   </div>
         </div> 
     </main>
+
+    <% if(book.type !== "pdf") { %>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+    <script>
+
+      var book = <%-JSON.stringify(book)%>
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoiYmFiYXR1bmRlNTAiLCJhIjoiY2pyYmIwMWJmMHh3ODRhb2NkaGZyMGhmbSJ9.LFsfiAUa3iZY_6hK7g7-fw';
+      
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/light-v10',
+        center: book.coordinates,
+        zoom: 14
+      });
+        
+  
+      // create a HTML element for each feature
+      var el = document.createElement('div');
+      el.className = 'marker';
+    
+      // make a marker for each feature and add to the map
+      new mapboxgl.Marker(el)
+        .setLngLat(book.coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+      .setHTML('<h3>' + book.title + '</h3><p>' + book.location + '</p>'))
+        .addTo(map);
+      
+      </script>
+    <% } %>
     
 
 

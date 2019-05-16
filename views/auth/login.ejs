@@ -1,51 +1,72 @@
 <%- include('../includes/head.ejs') %>
 
 <body>
-    <%- include('../includes/nav.ejs') %>
-    <main>
-       <div class="container">
-            <% if(errorMessage) { %>
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-                        <%= errorMessage %>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+  <% if(successMessage ) { %>
+    <div class="alert text-center alert-success alert-dismissible fade show mb-0" role="alert">
+        <strong><%= successMessage %></strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+  <% } %>
+  <%- include('../includes/nav.ejs') %>
+  <main>
+    <section id="login" class="py-5 mb-5 mt-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 mx-auto">
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                <h4><i class="fas fa-sign-in-alt"></i> Login</h4>
+              </div>
+              <div class="card-body">
+                <form action="/auth/login" method="POST">
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                      type="email"
+                      class="form-control <%= errorMessage ? 'border border-danger' : '' %>"
+                      name="email"
+                      id="email"
+                      value="<%=oldInput.email %>"
+                      required
+                    />
+                    <div class="invalid-feedback <%=errorMessage ? 'display-invalid-message' : '' %>">
+                        <%= errorMessage %> 
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                      type="password"
+                      class="form-control <%= errorMessage ? 'border border-danger' : '' %>"
+                      name="password"
+                      id="password"
+                      value="<%=oldInput.password %>"
+                      required
+                    />
+                    <div class="invalid-feedback <%=errorMessage ? 'display-invalid-message' : '' %>">
+                        <%= errorMessage %> 
+                    </div>
+                  </div>
+                  <input
+                    type="submit"
+                    value="Login"
+                    class="btn btn-primary btn-block"
+                  />
+                  <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                </form>
+                <div class="text-center py-2">
+                    <a href="/auth/reset">  Forget Password? </a>
                 </div>
-           <% } %>
-           <% if(successMessage.length > 0) { %>
-            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-                    <%= successMessage %>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+              </div>
             </div>
-       <% } %>
-           <div class="col-md-6 mx-auto">
-               <form action="/auth/login" method="POST">
-                    <div class="card">
-                            <div class="card-header">
-                              <h1 class="text-center">Login</h1>
-                            </div>
-                           <div class="card-body">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border border-danger' : '' %>" name="email" id="email" >
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border border-danger' : '' %>" name="password" id="password">
-                                </div>
-                           </div>
-                           <input type="hidden" value="<%= csrfToken %>" name="_csrf">
-                           <div class="card-footer">
-                               <button type="submit" class="btn btn-primary btn-block">Submit</button>
-                           </div>
-                          </div>
-                       </div>
-               </form>
-       </div>
-    </main>
-    
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-
-<%- include('../includes/footer.ejs') %>
+  <%- include('../includes/footer.ejs') %>
+</body>

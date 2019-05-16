@@ -15,18 +15,41 @@ const bookSchema = new Schema({
      type: String,
      required: true
  },
+ available: {
+    type: Boolean,
+    default: true
+ },
  image: {
      type: String,
      required: true
  },
+location: {
+    type: String,
+    required: false
+},
+enquiriesNumber: {
+    type: Number,
+    default: 0
+},
+coordinates: {
+    type: Array,
+    required: false
+},
+ pdf: {
+    type: String,
+    required: false
+ },
+ downloads: {
+    type: Number,
+    required: false
+ },
  userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   },
  averageRatings: {
     type: Number,
-    default: 0
+    required: true
  },
   reviewsId: [{
       type: Schema.Types.ObjectId,

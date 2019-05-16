@@ -1,6 +1,27 @@
-
+<footer id="main-footer" class="py-4 bg-primary text-white text-center">
+        Copyright &copy;
+        <span id="year"></span>   
+        <div class="main-header__brand">
+                <img src="/images/buk2.png" alt="bukooh logo" >
+        </div>
+</footer>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
+<script src="https://cdn.ckeditor.com/4.11.4/standard/ckeditor.js"></script>
+
+<script>
+        //Get the current year for the copyright
+        $('#year').text(new Date().getFullYear())
+        $('.slider').slick({
+                infinite: true,
+                slideToShow: 1,
+                slideToScroll: 1
+            })
+            CKEDITOR.replace( 'description' );
+</script> 
+
 </body>
 </html>
