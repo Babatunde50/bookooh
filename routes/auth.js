@@ -6,6 +6,7 @@ const User = require('../models/user')
 
 const router = express.Router();
 
+router.get('/signup', authController.getSignUp)
 
 router.post('/signup', [
     body('email', 'Please provide a valid email').isEmail().custom(value => {
