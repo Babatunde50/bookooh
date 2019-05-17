@@ -118,7 +118,7 @@ exports.postLogin = async (req, res, next) => {
                     password: password
                     },
                 validationErrors: errors.array(),
-                successMessage: null
+                successMessage: ''
                     });
                 }
         const doMatch = await bcrypt.compare(password, user.password)
