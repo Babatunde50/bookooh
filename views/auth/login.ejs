@@ -1,7 +1,7 @@
 <%- include('../includes/head.ejs') %>
 
 <body>
-  <% if(successMessage ) { %>
+  <% if(successMessage.length > 0 ) { %>
     <div class="alert text-center alert-success alert-dismissible fade show mb-0" role="alert">
         <strong><%= successMessage %></strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -11,6 +11,7 @@
   <% } %>
   <%- include('../includes/nav.ejs') %>
   <main>
+    <%= successMessage %>
     <section id="login" class="py-5 mb-5 mt-3">
       <div class="container">
         <div class="row">

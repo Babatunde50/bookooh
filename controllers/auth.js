@@ -29,7 +29,7 @@ exports.getLogin = (req, res, next) => {
     if(message.length > 0) {
         message = message[0]
     } else {
-        message = null
+        message = ''
     }
     res.render('auth/login', {
         pageTitle: 'Login',
@@ -102,7 +102,7 @@ exports.postLogin = async (req, res, next) => {
             password: password
         },
         validationErrors: errors.array(),
-        successMessage: null
+        successMessage: ''
       });
     }
 
