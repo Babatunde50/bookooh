@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 const bcrypt = require('bcryptjs')
 const { validationResult } = require('express-validator/check')
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
@@ -100,7 +102,8 @@ exports.postPasswordUpdate = async (req, res, next) => {
             oldPassword: req.body.oldPassword,
             newPassword: req.body.newPassword,
             confirmNewPassword: confirmNewPassword
-        }
+        },
+        successMessage: null
       })
     };
     try {
@@ -148,7 +151,8 @@ exports.postEditUsername = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: errors.array()[0].msg,
-        errorLocation: "username"
+        errorLocation: "username",
+        successMessage: null
       });
     };
 
@@ -158,7 +162,8 @@ exports.postEditUsername = async (req, res, next) => {
             path: '/profile',
             user: user,
             errorMessage: "Value was same as before",
-            errorLocation: "username"
+            errorLocation: "username",
+            successMessage: null
           });
     }
 
@@ -169,7 +174,8 @@ exports.postEditUsername = async (req, res, next) => {
       path: '/profile',
       user: user,
       errorMessage: "A user with that username already exists. Please try a different one",
-      errorLocation: "username"
+      errorLocation: "username",
+      successMessage: null
     });
   }
   user.username = username
@@ -197,7 +203,8 @@ exports.postEditEmail = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: errors.array()[0].msg,
-        errorLocation: "email"
+        errorLocation: "email",
+        successMessage: null
       });
     };
 
@@ -207,7 +214,8 @@ exports.postEditEmail = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: "Value was same as before",
-        errorLocation: "email"
+        errorLocation: "email",
+        successMessage: null
       });
       }
 
@@ -218,7 +226,8 @@ exports.postEditEmail = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: "A user with that email already exists. Please try a different one",
-        errorLocation: "email"
+        errorLocation: "email",
+        successMessage: null
       });
     }
     user.email = email
@@ -246,7 +255,8 @@ exports.postEditMobile = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: errors.array()[0].msg,
-        errorLocation: "mobile"
+        errorLocation: "mobile",
+        successMessage: null
       });
     };
     if(formalMobile === mobileConvert) {
@@ -255,7 +265,8 @@ exports.postEditMobile = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: "Value was same as before",
-        errorLocation: "mobile"
+        errorLocation: "mobile",
+        successMessage: null
       });
       }
 
@@ -266,7 +277,8 @@ exports.postEditMobile = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: "A user with that mobile number already exists. Please try a different one",
-        errorLocation: "mobile"
+        errorLocation: "mobile",
+        successMessage: null
       });
     }
     user.mobile = mobileConvert
@@ -290,14 +302,16 @@ exports.postEditImage = async (req, res, next) => {
         path: '/profile',
         user: user,
         errorMessage: errors.array()[0].msg,
-        errorLocation: "image"
+        errorLocation: "image",
+        successMessage: null
       });
     };
     const profileImage = req.files.image[0].path
     if(user.profileImage) {
       fileHelper.deleteFile(user.profileImage)
-    }
+    } 
     user.profileImage = profileImage
+    
     await user.save()
     req.flash('success', 'Your profile Image has been updated successfully')
     res.redirect("/profile/edit")

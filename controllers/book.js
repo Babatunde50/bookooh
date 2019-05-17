@@ -1,8 +1,6 @@
 const fs = require("fs")
 
 const Nexmo = require('nexmo')
-//const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
-//const geocodingClient = mbxGeocoding({ accessToken: 'pk.eyJ1IjoiYmFiYXR1bmRlNTAiLCJhIjoiY2p2OXdleTl2MGZibDRlcW15cG5raWludCJ9.tPMSVi86muRBzc07nERijQ'})
 const { validationResult } = require('express-validator/check')
 
 const Book = require('../models/book')
@@ -16,7 +14,7 @@ exports.getIndex = async (req, res, next) => {
   if(message.length > 0) {
       message = message[0]
   } else {
-      message = null
+      message = ''
   }
   try {
     const books = await Book.find()
@@ -160,12 +158,20 @@ exports.downloadBook = async (req, res, next) => {
     const foundBook = await Book.findById(bookId)
     const bookName = foundBook.title
     const bookPath = foundBook.pdf
-    foundBook.downloads = foundBook.downloads + 1
+    let counter = 0
+    fs.readFile(bookPath, (err, data) => {
+      if (err) {
+        req.flash("success","The book file is not found. We are sorry, this will be fixed soon")
+        return res.redirect("back")
+      }
+      const file = fs.ReadStream(bookPath)
+      res.setHeader('Content-Type', 'application/pdf')
+      res.setHeader('Content-Disposition', 'attachment; filename="' + bookName + '.pdf"' )
+      file.pipe(res)
+      counter = 1
+    });
+    foundBook.downloads = foundBook.downloads + counter
     await foundBook.save()
-    const file = fs.ReadStream(bookPath)
-    res.setHeader('Content-Type', 'application/pdf')
-    res.setHeader('Content-Disposition', 'attachment; filename="' + bookName + '.pdf"' )
-    file.pipe(res)
   } catch(err) {
       const error = new Error(err)
       error.httpStatusCode = 500
