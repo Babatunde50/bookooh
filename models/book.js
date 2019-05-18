@@ -27,10 +27,6 @@ location: {
     type: String,
     required: false
 },
-enquiriesNumber: {
-    type: Number,
-    default: 0
-},
 coordinates: {
     type: Array,
     required: false

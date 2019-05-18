@@ -4,11 +4,18 @@ const bcrypt = require('bcryptjs')
 const { validationResult } = require('express-validator/check')
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 const PNF = require('google-libphonenumber').PhoneNumberFormat;
+const cloudinary = require('cloudinary').v2;
+
 
 const User = require('../models/user')
 const Review = require('../models/review')
 const Book = require('../models/book')
-const fileHelper = require('../util/file-helper')
+
+cloudinary.config({ 
+  cloud_name: 'dqso3yl2s', 
+  api_key: '788773899141986', 
+  api_secret: 'KKqjbc1E_LzkKoJ1H6i3NMb9Ztw' 
+});
 
 exports.getEditProfile = async (req, res, next) => {
   let message = req.flash('success')
@@ -308,10 +315,24 @@ exports.postEditImage = async (req, res, next) => {
     };
     const profileImage = req.files.image[0].path
     if(user.profileImage) {
-      fileHelper.deleteFile(user.profileImage)
+      const imgArr = user.profileImage.split('.').slice(0, -1).join('.').split('/')
+      const imageId = imgArr[imgArr.length - 1]
+      try {
+        await cloudinary.uploader.destroy(imageId)
+      } catch(err) {
+        req.flash("success", "The image could not be uploaded. This is probably due to your network")
+        return res.redirect("/profile/edit")
+      }
+  
     } 
-    user.profileImage = profileImage
-    
+    let resultImg
+    try {
+      resultImg = await cloudinary.uploader.upload(profileImage, {quality: "auto"})
+    } catch(err) {
+        req.flash("success", "The image could not be uploaded. This is probably due to your network")
+        return res.redirect("/profile/edit")
+    }
+    user.profileImage = resultImg.url
     await user.save()
     req.flash('success', 'Your profile Image has been updated successfully')
     res.redirect("/profile/edit")
@@ -331,11 +352,29 @@ exports.postDeleteAccount = async (req, res, next) => {
   for(let i =0; i < pdfsAndImages.length; i++) {
     finalPdfsAndImages.push(pdfsAndImages[i][0], pdfsAndImages[i][1] )
   }
-  images.forEach(image => {
-    fileHelper.deleteFile(image)
+  images.forEach(async (image) => {
+    //delete image
+    const imgArr = image.split('.').slice(0, -1).join('.').split('/')
+    const imageId = imgArr[imgArr.length - 1]
+    try {
+      await cloudinary.uploader.destroy(imageId)
+    } catch(err) {
+      req.flash("success", "Your account could not be deleted. This is probably due to your network")
+      return res.redirect("/profile/edit")
+    }
+    
   })
-  finalPdfsAndImages.forEach(data => {
-    fileHelper.deleteFile(data)
+  finalPdfsAndImages.forEach(async (data) => {
+    //delete pdf and image
+    const pdfImgArr = data.split('.').slice(0, -1).join('.').split('/')
+    const pdfImgId = pdfImgArr[pdfImgArr.length - 1]
+    try {
+      await cloudinary.uploader.destroy(pdfImgId)
+    } catch(err) {
+      req.flash("success", "Your account could not be deleted. This is probably due to your network")
+      return res.redirect("/profile/edit")
+    }
+    
   })
     await Review.deleteMany({userId: req.user._id})
     await Book.deleteMany({userId: req.user._id})

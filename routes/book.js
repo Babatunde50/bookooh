@@ -16,7 +16,7 @@ router.get("/books", bookController.getBooks);
 
 router.get("/book/:bookId", bookController.getBook)
 
-router.get("/book/download/:bookId", bookController.downloadBook)
+router.post("/book/download/:bookId", bookController.downloadBook)
 
 router.get("/add-book/hardcopy", isAuth, bookController.getAddBookHardCopy);
 

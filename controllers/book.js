@@ -1,12 +1,19 @@
 const fs = require("fs")
 
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({ 
+  cloud_name: 'dqso3yl2s', 
+  api_key: '788773899141986', 
+  api_secret: 'KKqjbc1E_LzkKoJ1H6i3NMb9Ztw' 
+});
+
 const Nexmo = require('nexmo')
 const { validationResult } = require('express-validator/check')
 
 const Book = require('../models/book')
 const User = require('../models/user')
 const Review = require('../models/review')
-const fileHelper = require('../util/file-helper')
 const coordinates = require("../maps")
 
 exports.getIndex = async (req, res, next) => {
@@ -98,6 +105,7 @@ exports.getBook = async (req, res, next) => {
   let hasReview = false
   let ownedBook = false
   let review = null
+  let pdfLink
   const loggedInUser = req.session.isLoggedIn ? req.user._id.toString() : null
   try {
     const book = await Book.findOne({
@@ -106,6 +114,12 @@ exports.getBook = async (req, res, next) => {
     const reviews = await Review.find({
       bookId: book._id
     }).populate('userId').exec()
+
+    if(book.pdf) {
+      pdfLink = book.pdf.split("/")
+      pdfLink.splice(6, 0, "fl_attachment")
+      pdfLink = pdfLink.join("/")
+    }
     const averageRatings = await Review.aggregate([{
         $match: {
           _id: {
@@ -143,6 +157,7 @@ exports.getBook = async (req, res, next) => {
       hasReview: hasReview,
       review: review,
       successMessage: message,
+      pdfLink: pdfLink,
       loggedInUser: loggedInUser
     });
   } catch (err) {
@@ -155,24 +170,13 @@ exports.getBook = async (req, res, next) => {
 exports.downloadBook = async (req, res, next) => {
   try {
     const bookId = req.params.bookId
+    const pdfLink = req.body.pdfLink
     const foundBook = await Book.findById(bookId)
-    const bookName = foundBook.title
-    const bookPath = foundBook.pdf
-    let counter = 0
-    fs.readFile(bookPath, (err, data) => {
-      if (err) {
-        req.flash("success","The book file is not found. We are sorry, this will be fixed soon")
-        return res.redirect("back")
-      }
-      const file = fs.ReadStream(bookPath)
-      res.setHeader('Content-Type', 'application/pdf')
-      res.setHeader('Content-Disposition', 'attachment; filename="' + bookName + '.pdf"' )
-      file.pipe(res)
-      counter = 1
-    });
-    foundBook.downloads = foundBook.downloads + counter
+    foundBook.downloads = foundBook.downloads + 1
     await foundBook.save()
+    res.redirect(pdfLink)
   } catch(err) {
+      console.log(err)
       const error = new Error(err)
       error.httpStatusCode = 500
       return next(error)
@@ -214,31 +218,39 @@ exports.postBookHardCopy = async (req, res, next) => {
   }
   const image = req.files.image[0].path
   const coord = coordinates[location.split(" ")[0]]
-try {  
-    const book = new Book({
-      title: title,
-      image: image,
-      type: "hard-copy",
-      enquiriesNumber: 0,
-      description: description,
-      userId: req.user._id,
-      location: location,
-      coordinates: coord,
-      averageRatings: 0
-    })
-    savedBook = await book.save()
-    const user = await User.findById(req.user._id)
-    if (!user) {
-      res.redirect('/login')
-    }
-    user.booksId.push(savedBook._id)
-    await user.save()
-    req.flash("success", "The book was added successfully")
-    res.redirect('/books')
-  } catch (err) {
-      const error = new Error(err)
-      error.httpStatusCode = 500
-      return next(error)
+  try {  
+      let result
+       try{
+          result = await cloudinary.uploader.upload(image, {quality: "auto"})
+      } catch(err) {
+          console.log(err)
+          req.flash("success", "The book could not be added. This is probably to your network")
+          return res.redirect("/books")
+      } 
+      const book = new Book({
+        title: title,
+        image: result.url,
+        type: "hard-copy",
+        description: description,
+        userId: req.user._id,
+        location: location,
+        coordinates: coord,
+        averageRatings: 0
+      })
+      savedBook = await book.save()
+      const user = await User.findById(req.user._id)
+      if (!user) {
+        res.redirect('/login')
+      }
+      user.booksId.push(savedBook._id)
+      await user.save()
+      req.flash("success", "The book was added successfully")
+      res.redirect('/books')
+  }catch(err) {
+    console.log(err)
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    return next(error)
   }
 
 }
@@ -275,13 +287,21 @@ exports.postBookPdf = async (req, res, next) => {
   }
   const pdf = req.files.pdf[0].path
   const image = req.files.image[0].path
-
-try {  
+  try {
+      let imageRes
+      let pdfRes
+      try{
+        imageRes = await cloudinary.uploader.upload(image, {quality: "auto"})
+        pdfRes = await cloudinary.uploader.upload(pdf, {quality: "auto"})
+      } catch(err) {
+          req.flash("success", "The book could not be added. This is probably to your network")
+          return res.redirect("/books")
+      }
     const book = new Book({
       title: title,
       type: "pdf",
-      image: image,
-      pdf: pdf,
+      image: imageRes.url,
+      pdf: pdfRes.url,
       description: description,
       userId: req.user._id,
       averageRatings: 0,
@@ -296,10 +316,11 @@ try {
     await user.save()
     req.flash("success", "The book was added successfully")
     res.redirect('/books')
-  } catch (err) {
-      const error = new Error(err)
-      error.httpStatusCode = 500
-      return next(error)
+
+  } catch(err) {
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    return next(error)
   }
 
 }
@@ -388,8 +409,17 @@ exports.postEditBookHardCopy = async (req, res, next) => {
     book.available = updatedStatus
     book.coordinates = coord
     if(image) {
-      fileHelper.deleteFile(book.image)
-      book.image = image[0].path
+      const imgArr = book.image.split('.').slice(0, -1).join('.').split('/')
+      const imageId = imgArr[imgArr.length - 1]
+      let result
+       try{
+          await cloudinary.uploader.destroy(imageId)
+          result = await cloudinary.uploader.upload(image[0].path, {quality: "auto"})
+          book.image = result.url
+      } catch(err) {
+          req.flash("success", "The book could not be edited. This is probably to your network")
+          return res.redirect('/book/' + bookId)
+      } 
     }
     book.save()
     req.flash("success", "The book was edited successfully")
@@ -431,12 +461,30 @@ exports.postEditBookPdf = async (req, res, next) => {
     book.title = updatedTitle
     book.description = updatedDescription
     if(updatedImage) {
-      fileHelper.deleteFile(book.image)
-      book.image = updatedImage[0].path
+      const imgArr = book.image.split('.').slice(0, -1).join('.').split('/')
+      const imageId = imgArr[imgArr.length - 1]
+      let resultImg
+       try{
+          await cloudinary.uploader.destroy(imageId)
+          resultImg = await cloudinary.uploader.upload(updatedImage[0].path, {quality: "auto"})
+          book.image = resultImg.url
+      } catch(err) {
+          req.flash("success", "The book could not be edited. This is probably to your network")
+          res.redirect('/book/' + bookId)
+      }
     }
     if(updatedPdf) {
-      fileHelper.deleteFile(book.pdf)
-      book.pdf = updatedPdf[0].path
+      const pdfArr = book.pdf.split('.').slice(0, -1).join('.').split('/')
+      const pdfId = pdfArr[pdfArr.length - 1]
+      let resultPdf
+      try{
+        await cloudinary.uploader.destroy(pdfId)
+        resultPdf = await cloudinary.uploader.upload(updatedPdf[0].path, {quality: "auto"})
+        book.pdf = resultPdf.url
+    } catch(err) {
+        req.flash("success", "The book could not be edited. This is probably to your network")
+        res.redirect('/book/' + bookId)
+    }
     }
     book.save()
     req.flash("success", "The book was edited successfully")
@@ -457,14 +505,28 @@ exports.postDeleteBook = async (req, res, next) => {
     })
 
     if (!book) {
-      return new Error('No book found')
+      return res.redirect("/")
     }
     if(book.userId.toString() !== req.user._id.toString()) return res.redirect('/')
     if(book.type === "pdf") {
-      fileHelper.deleteFile(book.image)
-      fileHelper.deleteFile(book.pdf)
-    } else {
-      fileHelper.deleteFile(book.image)
+      //delete pdf
+      const pdfArr = book.pdf.split('.').slice(0, -1).join('.').split('/')
+      const pdfId = pdfArr[pdfArr.length - 1]
+      try {
+        await cloudinary.uploader.destroy(pdfId) 
+      } catch(err) {
+        req.flash("success", "The book could not be deleted. This is probably to your network")
+        return res.redirect('/book/' + bookId)
+      }
+    }
+    //delete image
+    const imgArr = book.image.split('.').slice(0, -1).join('.').split('/')
+    const imageId = imgArr[imgArr.length - 1]
+    try {
+      await cloudinary.uploader.destroy(imageId)
+    } catch(err) {
+      req.flash("success", "The book could not be deleted. This is probably to your network")
+      return res.redirect('/book/' + bookId)
     }
     
     await Review.deleteMany({
@@ -496,20 +558,18 @@ exports.postEnquiryMessage = async (req, res, next) => {
     const userRecieving = await User.findById({_id: loggedInUserId })
     const requestedBook = await Book.findById({_id: bookId})
     const userGiving = await User.findById({_id: requestedBook.userId })
-    requestedBook.enquiriesNumber = requestedBook.enquiriesNumber + 1
-    if(requestedBook.enquiriesNumber === 2) {
-      requestedBook.available = false
-    }
+    requestedBook.available = false
+    
     await requestedBook.save()
     const nexmo = new Nexmo({
       apiKey: process.env.API_KEY,
       apiSecret: process.env.API_SECRET
     })
-  
-    const from = userRecieving.mobile
+
+    const from = 'Bukooh'
     const to = userGiving.mobile
-    const text = `${message} book-title: ${requestedBook.title} .Please feel free to send a reply. @bookooh!`
-  
+    const text = `Please feel free to send a reply to ${userRecieving.mobile}. book-title: ${requestedBook.title} ${message} . @bukooh!`
+    console.log(from, to, text)
     nexmo.message.sendSms(from, to , text)
     req.flash("success", "The message has been sent successfully. We hope the owner contact you soon")
     res.redirect('/book/' + bookId )

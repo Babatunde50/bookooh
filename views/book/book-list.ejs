@@ -51,7 +51,7 @@
                 <% for(book of books) { %>
                     <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card listing-preview">
-                              <img class="card-img-top" src="/<%=book.image %>" alt="book">
+                              <img class="card-img-top" src="<%=book.image %>" alt="book">
                               <div class="card-img-overlay">
                                 <h2>
                                   <span class="badge badge-primary text-white"><%=book.type %></span>
@@ -59,7 +59,7 @@
                               </div>
                               <div class="card-body">
                                 <div class="listing-heading text-center">
-                                  <h4 class="text-primary"><%= book.title.length > 30 ? book.title.slice(0,30) + "..." : book.title %></h4>
+                                  <h4 class="text-primary"><%= book.title.length > 30 ? book.title.slice(0,20) + "..." : book.title %></h4>
                                 </div>
                                 <hr>
                                 <div class="row py-2 text-secondary">

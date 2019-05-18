@@ -3,6 +3,9 @@
         "MONGO_PASSWORD": "mongodb://localhost:27017/book-ooh",
         "SEND_GRID_KEY": "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",
         "API_KEY": "a781558b",
-        "API_SECRET": "28l2SCQlvTUaC3dt"
+        "API_SECRET": "28l2SCQlvTUaC3dt",
+        "CLOUD_NAME": "dqso3yl2s",
+        "API_KEY_CLOUD": "788773899141986",
+        "API_SECRET_CLOUD": "KKqjbc1E_LzkKoJ1H6i3NMb9Ztw"
     }
 }

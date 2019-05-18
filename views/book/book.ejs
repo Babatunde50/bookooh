@@ -45,7 +45,7 @@
             <a href="/books" class="btn btn-light mb-4">Back To Featured Books</a>
             <div class="row">
                 <div class="col-md-9">
-                     <img src="/<%=book.image %>" alt="" class="img-main img-fluid mb-3">
+                     <img src="<%=book.image %>" alt="" class="img-main img-fluid mb-3">
                      <div class="row mb-2 fields">
                         <div class="col-md-6">
                           <ul class="list-group list-group-flush">
@@ -95,7 +95,12 @@
                         </div>
                         <% if(book.type === "pdf") { %>
                         <div class="my-3 ml-auto">
-                          <%= book.downloads%> download(s) <a class="btn btn-outline-primary" href="/book/download/<%=book._id%>"><i class="fas fa-download"></i> Download</a>
+                          <%= book.downloads%> download(s) 
+                          <form action="/book/download/<%=book._id%>"  class="d-inline" method="POST">
+                              <input type="hidden" name="pdfLink" value="<%= pdfLink  %>"/>
+                              <input type="hidden" value="<%= csrfToken %>" name="_csrf">
+                              <button type="submit" class="btn btn-outline-primary"><i class="fas fa-download"></i> Download</button>
+                          </form>
                         </div>
                         <% } %>
                     </div>
@@ -227,13 +232,13 @@
           <form action="/inquiry/<%= book._id %>" method="POST">
             <div class="form-group">
               <label for="message" class="col-form-label">Message(SMS):</label>
-              <textarea name="message" class="form-control" placeholder="<%= book.enquiriesNumber >= 2 ? 'The maximum enquire limit for this book has been reached. Please request for a different book.' : '' %>"></textarea>
+              <textarea name="message" class="form-control" placeholder="<%= book.available && 'This feature has not been added due to financial constraint. It will be added soon' %>"></textarea>
             </div>
             <input type="hidden" value="<%= csrfToken %>" name="_csrf">
             <input type="hidden" value="<%= loggedInUser %>" name="loggedInUserId">
             <input type="hidden" value="<%= book._id %>" name="bookId">
             <hr>
-            <button type="submit" value="Send" <%= book.enquiriesNumber >= 2 && "disabled" %> class="btn btn-block btn-primary">Send</button>
+            <button type="submit" value="Send" <%= book.available && "disabled" %> class="btn btn-block btn-primary">Send</button>
           </form>
         </div>
       </div>
