@@ -262,7 +262,7 @@
                 <% for(review of reviews) { %>
                   <div class="row">
                       <div class="col-2">
-                          <img alt="<%=book.userId.username %>" width="50px" class="rounded-circle" src="<%= book.userId.profileImage ? book.userId.profileImage : '/images/default_avatar.png'  %>">
+                          <img alt="<%=review.userId.username %>" width="50px" class="rounded-circle" src="<%= review.userId.profileImage ? review.userId.profileImage : '/images/default_avatar.png'  %>">
                       </div>
                       <div class="col-10">
                           <div class="row">

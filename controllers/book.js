@@ -115,7 +115,7 @@ exports.getBook = async (req, res, next) => {
     const reviews = await Review.find({
       bookId: book._id
     }).populate('userId').exec()
-
+    console.log(reviews)
     if(book.pdf) {
       pdfLink = book.pdf.split("/")
       pdfLink.splice(6, 0, "fl_attachment")
