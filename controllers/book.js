@@ -47,7 +47,7 @@ exports.getBooks = async (req, res, next) => {
       message = null
   }
   const page = +req.query.page || 1
-  const ITEM_PER_PAGE = 1
+  const ITEM_PER_PAGE = 6
   let totalBooks
   let books
   let notFound
