@@ -47,7 +47,7 @@ exports.getBooks = async (req, res, next) => {
       message = null
   }
   const page = +req.query.page || 1
-  const ITEM_PER_PAGE = 6
+  const ITEM_PER_PAGE = 1
   let totalBooks
   let books
   let notFound
@@ -83,7 +83,8 @@ exports.getBooks = async (req, res, next) => {
       hasPreviousPage: page > 1,
       nextPage: page + 1,
       previousPage: page - 1,
-      lastPage: Math.ceil(totalBooks / ITEM_PER_PAGE)
+      lastPage: Math.ceil(totalBooks / ITEM_PER_PAGE),
+      totalBooks: totalBooks
     });
   } catch (err) {
       const error = new Error(err)
