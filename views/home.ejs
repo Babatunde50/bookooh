@@ -68,7 +68,7 @@
             <% for(book of books) { %>
                 <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card listing-preview">
-                          <img class="card-img-top" src="<%=book.image%>" alt="book">
+                          <img class="card-img-top" src="<%=book.image%>" alt="<%=book.title%>">
                           <div class="card-img-overlay">
                             <h2>
                               <span class="badge badge-primary text-white"><%=book.type %></span>

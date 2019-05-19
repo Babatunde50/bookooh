@@ -381,7 +381,6 @@ exports.postEditBookHardCopy = async (req, res, next) => {
   const updatedTitle = req.body.title
   const updatedDescription = req.body.description
   const updatedLocation = req.body.location
-  const updatedStatus = req.body.available === "true"
   const coord = coordinates[updatedLocation.split(" ")[0]]
   const errors = validationResult(req);
   try {
@@ -406,7 +405,6 @@ exports.postEditBookHardCopy = async (req, res, next) => {
     book.title = updatedTitle
     book.description = updatedDescription
     book.location = updatedLocation
-    book.available = updatedStatus
     book.coordinates = coord
     if(image) {
       const imgArr = book.image.split('.').slice(0, -1).join('.').split('/')

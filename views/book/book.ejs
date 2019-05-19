@@ -45,7 +45,7 @@
             <a href="/books" class="btn btn-light mb-4">Back To Featured Books</a>
             <div class="row">
                 <div class="col-md-9">
-                     <img src="<%=book.image %>" alt="" class="img-main img-fluid mb-3">
+                     <img src="<%=book.image %>" alt="<%= book.title %>" class="img-main img-fluid mb-3">
                      <div class="row mb-2 fields">
                         <div class="col-md-6">
                           <ul class="list-group list-group-flush">
@@ -123,7 +123,7 @@
                 </div>
                 <div class="col-md-3">
                   <div class="card mb-3">
-                    <img class="card-img-top" src="/<%= book.userId.profileImage ? book.userId.profileImage : 'images/default_avatar.png'  %>" alt="book owner">
+                    <img class="card-img-top" src="<%= book.userId.profileImage ? book.userId.profileImage : '/images/default_avatar.png'  %>" alt="book owner">
                       <div class="card-body">
                         <h5 class="card-title">Book Owner</h5>
                         <h6 class="text-secondary"><%= book.userId.username.toUpperCase() %></h6>
@@ -232,7 +232,7 @@
           <form action="/inquiry/<%= book._id %>" method="POST">
             <div class="form-group">
               <label for="message" class="col-form-label">Message(SMS):</label>
-              <textarea name="message" class="form-control" placeholder="<%= book.available && 'This feature has not been added due to financial constraint. It will be added soon' %>"></textarea>
+              <textarea name="message" class="form-control" placeholder="This feature has not been added due to financial constraint. It will be added soon'. You can call the book owner with this number +<%=book.userId.mobile %> "></textarea>
             </div>
             <input type="hidden" value="<%= csrfToken %>" name="_csrf">
             <input type="hidden" value="<%= loggedInUser %>" name="loggedInUserId">
@@ -262,7 +262,7 @@
                 <% for(review of reviews) { %>
                   <div class="row">
                       <div class="col-2">
-                          <img width="50px" class="rounded-circle" src="/<%= book.userId.profileImage ? book.userId.profileImage : 'images/default_avatar.png'  %>">
+                          <img alt="<%=book.userId.username %>" width="50px" class="rounded-circle" src="<%= book.userId.profileImage ? book.userId.profileImage : '/images/default_avatar.png'  %>">
                       </div>
                       <div class="col-10">
                           <div class="row">

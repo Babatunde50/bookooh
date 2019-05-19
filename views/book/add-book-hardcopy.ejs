@@ -23,6 +23,7 @@
                                 <select class="custom-select <%= validationErrors.find(e => e.param === 'location') ? 'border border-danger' : '' %>" name="location" value="<% if(editing) { %><%= book.location %><% }%>" id="location">
                                     <option value="null">Open this select menu</option>
                                     <option value="Tedder Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Tedder Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Tedder Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Tedder Hall' && 'selected' %><% } %> > Tedder Hall </option>
+                                    <option value="Mellanby Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Mellanby Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Mellanby Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Mellanby Hall' && 'selected' %><% } %> > Mellanby Hall </option>
                                     <option value="Kuti Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Kuti Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Kuti Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Kuti Hall' && 'selected' %><% } %> > Kuti Hall</option>
                                     <option value="Sultan Bello Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Sultan Bello Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Sultan Bello Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Sultan Bello Hall' && 'selected' %><% } %> >Sultan Bello Hall</option>
                                     <option value="Queen Elizabeth II Hall" <%if(editing && oldInput.location){ %><%= oldInput.location === 'Queen Elizabeth II Hall' && 'selected' %><% } else if(editing) { %><%=book.location === "Queen Elizabeth II Hall" && 'selected' %><% } else { %><%= oldInput.location === 'Queen Elizabeth II Hall' && 'selected' %><% } %>  >Queen Elizabeth II Hall</option>
@@ -52,15 +53,6 @@
                                         <%= validationErrors.findIndex(e => e.param === 'description') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'description')].msg %>
                                 </div>
                             </div>
-                            <% if(editing) { %>
-                                <div class="form-group">
-                                    <label for="location">Book Status </label>
-                                    <select class="custom-select" name="available" value="<% if(editing) { %><%= book.available %><% }%>">
-                                        <option value="true">Available</option>
-                                        <option value="false">Not Available</option>
-                                    </select>
-                                </div>
-                            <% } %>
                         </div>
                         <input type="hidden" value="<%= csrfToken %>" name="_csrf">
                         <div class="card-footer text-center">

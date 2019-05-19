@@ -9,7 +9,8 @@ const coordinates = {
     Idia: [3.8959877, 7.4402454],
     Obafemi: [3.8899134, 7.4355128 ],
     Tafawa: [3.8952901, 7.4422774 ],
-    Abdulsalami: [3.8929152, 7.4388954]
+    Abdulsalami: [3.8929152, 7.4388954],
+    Mellanby: [3.901175, 7.4480798 ],
 }
 
 module.exports = coordinates

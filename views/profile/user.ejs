@@ -99,7 +99,7 @@
                 </div>
             </div>
             <div class="col-md-3 text-center">
-                <img src="<%= user.profileImage ? user.profileImage : '/images/default_avatar.png' %>" alt="image" class="d-block img-fluid mb-3">
+                <img src="<%= user.profileImage ? user.profileImage : '/images/default_avatar.png' %>" alt="profile image" class="d-block img-fluid mb-3">
                 <form action="/profile/edit-image" method="POST" enctype="multipart/form-data">
                   <input type="file" class="form-control-file mb-2 <%= errorLocation === 'image' && 'border border-danger' %>" id="image" name="image" required>
                   <input type="hidden" value="<%= csrfToken %>" name="_csrf">

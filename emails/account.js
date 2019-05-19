@@ -49,7 +49,7 @@ const sendResetPasswordEmail = (email, token) => {
         html: `
                 <p>Forget your pasword?</p>
                 <p>No worries, we've got you covered. </p>
-                <p>Click this  <a href="https://bukooh2020.herokuapp.com/auth/reset/${token}">link</a> to reset your password</p>
+                <p>Click this  <a href="http://www.bukooh.com/auth/reset/${token}">link</a> to reset your password</p>
         `,
       };
       sgMail.send(msg);
@@ -62,9 +62,9 @@ const sendPasswordResetSuccessEmail = (email) => {
         subject: 'Password Reset Success',
         html: `
             <div>
-                <h1>Password Reset Success</h1>
+                <p>Password Reset Success</p>
                 <p>Your password has been reset successfully</p>
-                <p>Click this <a href="https://bukooh2020.herokuapp.com/auth/login">link</a> to Login with your new password</p>
+                <p>Click this <a href="http://www.bukooh.com/auth/login">link</a> to Login with your new password</p>
             </div>
         `,
       };
