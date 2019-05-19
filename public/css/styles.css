@@ -77,7 +77,7 @@
 
   #about-header {
     height: 200px;
-    background: url("/images/home.jpg");
+    background: url("/images/about-header.jpg");
     background-position: 0 -360px;
     background-attachment: fixed;
     color: white;
