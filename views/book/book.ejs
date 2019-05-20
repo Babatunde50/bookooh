@@ -133,7 +133,11 @@
                     <% if(ownedBook) { %>
                       <a href="/profile/books/<%=book.userId._id%>" class="btn-primary btn-block btn-lg text-center" style="text-decoration: none">View Your Book's</a>
                     <% } else { %>
-                      <a href="/profile/books/<%=book.userId._id%>" class="btn-primary btn-block btn-lg text-center" style="text-decoration: none">View All Books</a>
+                      <% if (book.type == "pdf") { %>
+                        <a href="/profile/books/<%=book.userId._id%>" class="btn-primary btn-block btn-lg text-center" style="text-decoration: none">View All Books</a>
+                      <% } else { %>
+                        <button type="button" class="btn-primary btn-block btn-lg text-center" data-toggle="modal" data-target="#inquiryModal">Make a Request</button>
+                      <% } %>
                    <% } %>
                   <% } else { %>
                     <a href="/profile/books/<%=book.userId._id%>" class="btn-primary btn-block btn-lg text-center" style="text-decoration: none">View All Books</a>

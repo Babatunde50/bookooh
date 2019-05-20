@@ -115,7 +115,6 @@ exports.getBook = async (req, res, next) => {
     const reviews = await Review.find({
       bookId: book._id
     }).populate('userId').exec()
-    console.log(reviews)
     if(book.pdf) {
       pdfLink = book.pdf.split("/")
       pdfLink.splice(6, 0, "fl_attachment")
@@ -177,7 +176,6 @@ exports.downloadBook = async (req, res, next) => {
     await foundBook.save()
     res.redirect(pdfLink)
   } catch(err) {
-      console.log(err)
       const error = new Error(err)
       error.httpStatusCode = 500
       return next(error)
@@ -224,7 +222,6 @@ exports.postBookHardCopy = async (req, res, next) => {
        try{
           result = await cloudinary.uploader.upload(image, {quality: "auto"})
       } catch(err) {
-          console.log(err)
           req.flash("success", "The book could not be added. This is probably to your network")
           return res.redirect("/books")
       } 
@@ -248,7 +245,6 @@ exports.postBookHardCopy = async (req, res, next) => {
       req.flash("success", "The book was added successfully")
       res.redirect('/books')
   }catch(err) {
-    console.log(err)
     const error = new Error(err)
     error.httpStatusCode = 500
     return next(error)
