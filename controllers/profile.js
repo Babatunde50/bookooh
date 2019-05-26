@@ -19,7 +19,6 @@ cloudinary.config({
 
 exports.getEditProfile = async (req, res, next) => {
   let message = req.flash('success')
-  console.log(message)
   if(message.length > 0) {
       message = message[0]
   } else {
@@ -382,7 +381,6 @@ exports.postDeleteAccount = async (req, res, next) => {
     await req.session.destroy()
     res.redirect('/')
   } catch(err) {
-    console.log(err)
     const error = new Error(err)
     error.httpStatusCode = 500
     return next(error)

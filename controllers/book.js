@@ -15,6 +15,7 @@ const Book = require('../models/book')
 const User = require('../models/user')
 const Review = require('../models/review')
 const coordinates = require("../maps")
+const { facDept } = require("../util/departments")
 
 exports.getIndex = async (req, res, next) => {
   let message = req.flash('success')
@@ -54,8 +55,8 @@ exports.getBooks = async (req, res, next) => {
   try {
     if(req.query.search) {
       const regex = new RegExp(escapeRegex(req.query.search), 'gi')
-      totalBooks = await Book.find({title: regex}).countDocuments()
-      books = await Book.find({title: regex})
+      totalBooks = await Book.find({ $or: [ { title: regex }, { department: regex }, { faculty: regex } ]}).countDocuments()
+      books = await Book.find({ $or: [ { title: regex }, { department: regex }, { faculty: regex } ]})
                 .skip((page - 1) * ITEM_PER_PAGE)
                 .limit(ITEM_PER_PAGE)
                 .sort({ updatedAt: -1 })
@@ -201,6 +202,7 @@ exports.postBookHardCopy = async (req, res, next) => {
   const title = req.body.title
   const description = req.body.description
   const location = req.body.location
+  const department = req.body.department
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render('book/add-book-hardcopy', {
@@ -210,11 +212,13 @@ exports.postBookHardCopy = async (req, res, next) => {
       oldInput: {
           title: title,
           description: description,
-          location: location
+          location: location,
+          department: department
       },
       validationErrors: errors.array()
     });
   }
+  const [faculty, dept] = facDept(department)
   const image = req.files.image[0].path
   const coord = coordinates[location.split(" ")[0]]
   try {  
@@ -233,6 +237,8 @@ exports.postBookHardCopy = async (req, res, next) => {
         userId: req.user._id,
         location: location,
         coordinates: coord,
+        department: dept,
+        faculty: faculty,
         averageRatings: 0
       })
       savedBook = await book.save()
@@ -269,6 +275,7 @@ exports.getAddBookPdf = (req, res, next) => {
 exports.postBookPdf = async (req, res, next) => {
   const title = req.body.title
   const description = req.body.description
+  const department = req.body.department
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render('book/add-book-pdf', {
@@ -282,6 +289,7 @@ exports.postBookPdf = async (req, res, next) => {
       validationErrors: errors.array()
     });
   }
+  const [faculty, dept] = facDept(department)
   const pdf = req.files.pdf[0].path
   const image = req.files.image[0].path
   try {
@@ -302,6 +310,8 @@ exports.postBookPdf = async (req, res, next) => {
       description: description,
       userId: req.user._id,
       averageRatings: 0,
+      department: dept,
+      faculty: faculty,
       downloads: 0
     })
     savedBook = await book.save()
@@ -379,6 +389,7 @@ exports.postEditBookHardCopy = async (req, res, next) => {
   const updatedDescription = req.body.description
   const updatedLocation = req.body.location
   const coord = coordinates[updatedLocation.split(" ")[0]]
+  const department = req.body.department
   const errors = validationResult(req);
   try {
     const book = await Book.findById({
@@ -397,6 +408,11 @@ exports.postEditBookHardCopy = async (req, res, next) => {
         validationErrors: errors.array(),
         book: book
       }); 
+    }
+    if( !(department === 'null') ) {
+      const [faculty, dept] = facDept(department)
+      book.faculty = faculty
+      book.department = dept
     }
     const image = req.files.image
     book.title = updatedTitle
@@ -433,8 +449,8 @@ exports.postEditBookPdf = async (req, res, next) => {
   const updatedImage = req.files.image
   const updatedPdf = req.files.pdf
   const updatedDescription = req.body.description
+  const department = req.body.department
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     return res.status(422).render('book/add-book-pdf', {
       pageTitle: 'Add Book',
@@ -447,7 +463,11 @@ exports.postEditBookPdf = async (req, res, next) => {
       validationErrors: errors.array()
     });
   }
-
+  if( !(department === 'null') ) {
+    const [faculty, dept] = facDept(department)
+    book.faculty = faculty
+    book.department = dept
+  }
   try {
     const book = await Book.findById({
       _id: bookId
@@ -564,7 +584,6 @@ exports.postEnquiryMessage = async (req, res, next) => {
     const from = 'Bukooh'
     const to = userGiving.mobile
     const text = `Please feel free to send a reply to ${userRecieving.mobile}. book-title: ${requestedBook.title} ${message} . @bukooh!`
-    console.log(from, to, text)
     nexmo.message.sendSms(from, to , text)
     req.flash("success", "The message has been sent successfully. We hope the owner contact you soon")
     res.redirect('/book/' + bookId )

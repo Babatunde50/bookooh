@@ -11,12 +11,6 @@
     <title>BukOoh!</title>
 
 <body>
-    <div class="alert text-center alert-warning alert-dismissible fade show mb-0" role="alert">
-        <strong>The book category feature - specifying book department and faculty is now under developement</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
     <% if(successMessage ) { %>
       <div class="alert text-center alert-success alert-dismissible fade show mb-0" role="alert">
           <strong><%= successMessage %></strong>
@@ -92,7 +86,13 @@
                             </div>
                             <div class="row py-2 text-secondary">
                               <div class="col-12">
-                                <strong><i class="fas fa-fire"></i> <%= book.available ? "Available" : "Not Available" %> %></strong>
+                                <strong><i class="fas fa-fire"></i> <%= book.available ? "Available" : "Not Available" %></strong>
+                              </div>
+                            </div>
+                            <div class="row py-2 text-secondary">
+                              <div class="col-12">
+                                <strong><i class="fas fa-atom"></i> <%= book.department ? book.department : "Not Specified" %>
+                                (<%= book.faculty ? book.faculty : "Not Specified" %>)</strong>
                               </div>
                             </div>
                             <div class="row text-secondary py-2 pb-2">

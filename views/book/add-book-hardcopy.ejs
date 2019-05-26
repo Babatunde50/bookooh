@@ -12,10 +12,80 @@
                     <form action="<%if(editing) { %>/edit-hardcopy/<%=book._id %><% } else { %>/add-hardcopy<%} %>" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="">Title</label>
+                                <label for="title">Title</label>
                                 <input required type="text" class="form-control <%= validationErrors.find(e => e.param === 'title') ? 'border border-danger' : '' %>" name="title" value="<%if(editing && oldInput.title){ %><%= oldInput.title %><% } else if(editing) { %><%=book.title%><% } else { %><%= oldInput.title %><% } %>" >
                                 <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'title') ? 'display-invalid-message' : '' %>">              
                                         <%= validationErrors.findIndex(e => e.param === 'title') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'title')].msg %>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <select class="custom-select <%= validationErrors.find(e => e.param === 'department') ? 'border border-danger' : '' %>" name="department" value="<% if(editing) { %><%= book.department %><% }%>">
+                                    <option value="null">Open this select menu</option>
+                                    <option value="Adult Education">Adult Education</option>
+                                    <option value="Agricultural And Environmental Engineering">Agricultural And Environmental Engineering</option>
+                                    <option value="Agriculture">Agriculture</option>
+                                    <option value="Agriculture And forestry">Agriculture And forestry</option>
+                                    <option value="Anthropology-Arts">Anthropology(Arts) </option>
+                                    <option value="Anthropology-Science">Anthropology(Science)</option>
+                                    <option value="Arabic Language and Literature">Arabic Language and Literature</option>
+                                    <option value="Archaeology-Science">Archaeology(Science)</option>
+                                    <option value="Archaeology-Arts">Archaeology(Arts)</option>
+                                    <option value="Biochemistry">Biochemistry</option>
+                                    <option value="Botany">Botany</option>
+                                    <option value="Chemistry">Chemistry</option>
+                                    <option value="Civil Engineering">Civil Engineering</option>
+                                    <option value="Classics">Classics</option>
+                                    <option value="Communication and Language Arts">Communication and Language Arts</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Dentistry">Dentistry</option>
+                                    <option value="Economics">Economics</option>
+                                    <option value="Educational Management">Educational Management</option>
+                                    <option value="Electrical And Electronics Engineering">Electrical And Electronics Engineering</option>
+                                    <option value="English Language and Literature">English Language and Literature</option>
+                                    <option value="European Studies">European Studies</option>
+                                    <option value="Fisheries and Wildlife Management">Fisheries and Wildlife Management</option>
+                                    <option value="Food Technology">Food Technology</option>
+                                    <option value="Forestry Resources Management">Forestry Resources Management</option>
+                                    <option value="Geography-Science">Geography(Science)</option>
+                                    <option value="Geography-Social Science">Geography(Social Science)</option>
+                                    <option value="Geology">Geology</option>
+                                    <option value="Guidance And Counselling">Guidance & Counselling</option>
+                                    <option value="Health Education">Health Education</option>
+                                    <option value="History">History</option>
+                                    <option value="Human Kinetics">Human Kinetics</option>
+                                    <option value="Human Nutrition">Human Nutrition</option>
+                                    <option value="Industrial Chemistry">Industrial Chemistry</option>
+                                    <option value="Industrial Production Engineering">Industrial Production Engineering</option>
+                                    <option value="Islamic Studies">Islamic Studies</option>
+                                    <option value="Law">Law</option>
+                                    <option value="Library Studies">Library Studies</option>
+                                    <option value="Linguistics and African Studies">Linguistics and African Studies</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                    <option value="Medicine and Surgery">Medicine and Surgery</option>
+                                    <option value="Microbiology">Microbiology</option>
+                                    <option value="Nursing Science">Nursing Science</option>
+                                    <option value="Petroleum Engineering">Petroleum Engineering</option>
+                                    <option value="Pharmacy">Pharmacy</option>
+                                    <option value="Philosophy">Philosophy</option>
+                                    <option value="Physics">Physics</option>
+                                    <option value="Physiology">Physiology</option>
+                                    <option value="Physiotherapy">Physiotherapy</option>
+                                    <option value="Political Science">Political Science</option>
+                                    <option value="Psychology">Psychology</option>
+                                    <option value="Religious Studies">Religious Studies</option>
+                                    <option value="Sociology">Sociology</option>
+                                    <option value="Special Education">Special Education</option>
+                                    <option value="Statistics">Statistics</option>
+                                    <option value="Teacher Education">Teacher Education</option>
+                                    <option value="Theatre Arts">Theatre Arts</option>
+                                    <option value="Veterinary Medicine">Veterinary Medicine</option>
+                                    <option value="Wood Products Engineering">Wood Products Engineering</option>
+                                    <option value="Zoology">Zoology</option>
+                                </select>
+                                <div class="invalid-feedback <%= validationErrors.find(e => e.param === 'department') ? 'display-invalid-message' : '' %>">              
+                                    <%= validationErrors.findIndex(e => e.param === 'department') > -1 && validationErrors[validationErrors.findIndex(e => e.param === 'department')].msg %>
                                 </div>
                             </div>
                             <div class="form-group">

@@ -15,6 +15,14 @@ const bookSchema = new Schema({
      type: String,
      required: true
  },
+ department: {
+     type: String,
+     required: false
+ },
+ faculty: {
+     type: String,
+     required: false
+ },
  available: {
     type: Boolean,
     default: true

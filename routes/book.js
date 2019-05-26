@@ -42,6 +42,13 @@ router.post("/add-hardcopy", isAuth, [
                 return Promise.reject("Please select one of the given options")
             }
             return true
+        }),
+    body('department')
+        .custom(value => {
+            if(value === "null") {
+                return Promise.reject("Please select one of the given options")
+            }
+            return true
         })
 ], bookController.postBookHardCopy);
 
@@ -72,6 +79,13 @@ router.post("/add-pdf", isAuth, [
             const fileType = req.files.pdf[0].originalname.split(".")[req.files.pdf[0].originalname.split(".").length - 1].toLowerCase()
             if(fileType !== "pdf") {
                 return Promise.reject("Must be a pdf file")
+            }
+            return true
+        }),
+    body('department')
+        .custom(value => {
+            if(value === "null") {
+                return Promise.reject("Please select one of the given options")
             }
             return true
         })

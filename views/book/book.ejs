@@ -14,7 +14,7 @@
         <div class="container">
             <div class="row text-center">
                 <div class="col-md-12">
-                  <h1 class="display-4"><%= book.title %></h1>
+                  <h2 class="pt-4"><%= book.title %></h2>
                   <% if(book.type !== "pdf") { %>
                     <button type="button" class="btn btn-lg btn-link text-white" data-toggle="modal" data-target="#mapModal">
                         <i class="fas fa-map-marker text-primary"></i>  View location
@@ -58,6 +58,10 @@
                               <span class="float-right"><%= book.available ? "Available" : "Not Available" %> %></span> 
                             </li>
                             <li class="list-group-item text-secondary">
+                              <i class="fas fa-atom"></i> Department
+                              <span class="float-right"><%= book.department ? book.department : "Not Specified" %></span> 
+                            </li>
+                            <li class="list-group-item text-secondary">
                                 <i class="fas fa-star"></i> Average Rating
                                 <span class="float-right"><% if(book.averageRatings.toString().length == 1) { %>
                                     <%=book.averageRatings%>.0
@@ -77,6 +81,11 @@
                             <li class="list-group-item text-secondary">
                                 <i class="fas fa-clock"></i> Time Submitted
                               <span class="float-right"> <%= moment(book.createdAt.getTime()).fromNow() %>
+                              </span>
+                            </li>
+                            <li class="list-group-item text-secondary">
+                                <i class="fas fa-flask"></i> Faculty
+                              <span class="float-right"> <%= book.faculty ? book.faculty : "Not Specified" %>
                               </span>
                             </li>
                             <li class="list-group-item text-secondary">
