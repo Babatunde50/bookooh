@@ -26,7 +26,7 @@ exports.getIndex = async (req, res, next) => {
   }
   try {
     const books = await Book.find()
-                  .limit(3).sort({ updatedAt: -1 }).populate('userId').exec()
+                  .limit(3).sort({ createdAt: -1 }).populate('userId').exec()
     res.render('home', {
       pageTitle: 'Bookooh',
       path: '/',
@@ -53,6 +53,7 @@ exports.getBooks = async (req, res, next) => {
   let books
   let notFound
   try {
+    const allBooksCount = await Book.find().countDocuments()
     if(req.query.search) {
       const regex = new RegExp(escapeRegex(req.query.search), 'gi')
       totalBooks = await Book.find({ $or: [ { title: regex }, { department: regex }, { faculty: regex } ]}).countDocuments()
@@ -76,6 +77,7 @@ exports.getBooks = async (req, res, next) => {
       pageTitle: 'Books',
       path: '/books',
       books: books,
+      allBooksCount: allBooksCount,
       notFound: notFound,
       showPagination: totalBooks > ITEM_PER_PAGE,
       successMessage: message,

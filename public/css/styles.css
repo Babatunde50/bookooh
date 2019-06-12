@@ -11,7 +11,7 @@
     text-decoration: none;
     font-weight: bold;
     font-size: 25px;
-    height: 25px;
+    height: 40px;
     display: inline-block;
     vertical-align: top;
 }
@@ -33,6 +33,11 @@
     min-height: 200px;
 }
 
+
+.card-img-overlay {
+  bottom: 58% !important;
+  }
+
 #showcase-inner::before {
       content: '';
       position: absolute;
@@ -49,6 +54,12 @@
 
 .display-invalid-message {
     display: block;
+}
+
+.row-review {
+  margin-bottom: 1.4rem;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+  padding: 1rem;
 }
 
 #map {

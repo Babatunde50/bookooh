@@ -273,7 +273,7 @@
             <div class="col-12">
               <% if(reviews.length > 0) { %>
                 <% for(review of reviews) { %>
-                  <div class="row">
+                  <div class="row row-review">
                       <div class="col-2">
                           <img alt="<%=review.userId.username %>" width="50px" class="rounded-circle" src="<%= review.userId.profileImage ? review.userId.profileImage : '/images/default_avatar.png'  %>">
                       </div>
@@ -287,10 +287,10 @@
                           <i class="text-right"><% for(let i=1; i <= Number(review.rating); i++) { %>
                             <i class="fas fa-star text-warning"></i></i>
                           <% } %>
-                          <% if (review.userId._id.toString() === loggedInUser ) { %>
                             <div>
                                 <i class="text-muted text-right"><i class="far fa-clock"></i> <%= moment(review.updatedAt.getTime()).fromNow() %></i>
                             </div>
+                          <% if (review.userId._id.toString() === loggedInUser ) { %>
                             <div class="pb-4 py-2 text-left">
                               <a href="/book/<%= book._id %>/<%= review._id %>/edit-review" class="btn btn-sm btn-outline-warning">
                                 Edit

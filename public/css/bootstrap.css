@@ -3310,10 +3310,10 @@ input[type="button"].btn-block {
 
 .card-img-overlay {
   position: absolute;
-  top: 0;
+  /* top: 0; */
   right: 0;
-  bottom: 0;
-  left: 0;
+  bottom: 58%;
+  /* left: 0; */
   padding: 1.25rem; }
 
 .card-img {

@@ -11,7 +11,7 @@
     text-decoration: none;
     font-weight: bold;
     font-size: 25px;
-    height: 25px;
+    height: 40px;
     display: inline-block;
     vertical-align: top;
 }
@@ -35,22 +35,18 @@
 
 #home-section {
     background: url('/images/home.jpg') center/cover;
-    filter: grayscale(30%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     min-height: 600px;
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .home-inner {
     min-height: 400px;
     width: 80%;
     background: rgba(51, 51, 51, 0.9);
-    position: absolute;
-    top: 15%;
-    left: 0;
-    right: 0;
-    margin: auto;
     padding: 1.2rem;
 }
 
@@ -59,7 +55,6 @@
     background: var(--main-color);
     padding: 5px;
     border-radius: 5px;
-
 }
 
 .card .card-img-top {
@@ -87,6 +82,5 @@
 @media(max-width: 640px) {
     .home-inner {
         width: 100%;
-        top: 30px;
     }
 }
