@@ -1,6 +1,6 @@
 {
     "env" : {
-        "MONGO_PASSWORD": "mongodb://localhost:27017/book-ooh",
+        "MONGO_PASSWORD": "mongodb+srv://babatunde:Yeshua123!@cluster0-utxpd.mongodb.net/bukooh",
         "SEND_GRID_KEY": "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",
         "API_KEY": "a781558b",
         "API_SECRET": "28l2SCQlvTUaC3dt",

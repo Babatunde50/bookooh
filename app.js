@@ -18,11 +18,12 @@ const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profile')
 const User = require('./models/user')
 
-const app = express()
+const app = express();
+const port = process.env.PORT || 3000;
+console.log(process.env)
 
-const MONGODB_URI = process.env.MONGO_PASSWORD
 const store = new MongoDBStore({
-  uri: MONGODB_URI,
+  uri: 'mongodb+srv://babatunde:Yeshua123!@cluster0-utxpd.mongodb.net/bukooh',
   collection: 'sessions'
 });
 const csrfProtection = csrf()
@@ -123,9 +124,10 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(MONGODB_URI, {useNewUrlParser: true})
+  .connect('mongodb+srv://babatunde:Yeshua1234@cluster0-utxpd.mongodb.net/e-commerce?retryWrites=true&w=majority', {useNewUrlParser: true})
+  //mongodb+srv://babatunde:Yeshua1234@cluster0-utxpd.mongodb.net/e-commerce?retryWrites=true&w=majority
   .then(result => {
-    app.listen(process.env.PORT || 3000);
+    app.listen(port);
     console.log("connected")
   })
   .catch(err => {
