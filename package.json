@@ -32,7 +32,7 @@
     "google-libphonenumber": "^3.2.2",
     "helmet": "^3.18.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.4.6",
+    "mongoose": "^5.7.5",
     "multer": "^1.4.1",
     "nexmo": "^2.4.1",
     "nodemailer": "^5.1.1",
