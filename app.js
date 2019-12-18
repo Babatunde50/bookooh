@@ -23,7 +23,7 @@ const port = process.env.PORT || 3000;
 console.log(process.env)
 
 const store = new MongoDBStore({
-  uri: 'mongodb+srv://babatunde:Yeshua123!@cluster0-utxpd.mongodb.net/bukooh',
+  uri: process.env.MONGO_PASSWORD,
   collection: 'sessions'
 });
 const csrfProtection = csrf()
@@ -124,8 +124,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect('mongodb+srv://babatunde:Yeshua1234@cluster0-utxpd.mongodb.net/e-commerce?retryWrites=true&w=majority', {useNewUrlParser: true})
-  //mongodb+srv://babatunde:Yeshua1234@cluster0-utxpd.mongodb.net/e-commerce?retryWrites=true&w=majority
+  .connect(process.env.MONGO_PASSWORD, {useNewUrlParser: true})
   .then(result => {
     app.listen(port);
     console.log("connected")
